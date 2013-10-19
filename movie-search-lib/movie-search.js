@@ -1,102 +1,127 @@
 var fbaseURL = "https://www.googleapis.com/freebase/v1/search";
 var fbaseKey = "AIzaSyDg3Mx_26umohj8Z_fCDdEufoNn1gry3QE";
 var omdbURL = "http://www.omdbapi.com/";
-var utils = new Utilities();
-
+var utils;
+var fbase;
+var found = false;
 
 function MovieSearch() {
+	utils = new Utilities();
+	fbase = new Freebase();
 }
 
-MovieSearch.prototype.searchMovie = function(movie) {
-	matchFound = false;
-	fbase = new FreebaseSearch();
-	omdb = new OMDbSearch();
-	fbase.searchMovie(movie);
-	omdb.searchMovie(movie);
+function Freebase() {}
+function OMDb() {}
+function Utilities() {}
+
+MovieSearch.prototype.search = function(movie) {
+	if(typeof(movie) == 'undefined')
+		return;
+	$("#resultText").text("");
+	found = false;
+	fbase.search(movie);
 };
 
-function FreebaseSearch() {
-}
-
-FreebaseSearch.prototype.searchMovie = function(movie) {
-	var request = fbaseURL + "?filter=(any type:/film/film)&spell=no_results&key=" + fbaseKey + "&query=" + movie;
-	$.getJSON(request,
+Freebase.prototype.search = function(movie) {
+	var fbaseReq = fbaseURL + "?filter=(any type:/film/film)&limit=5&spell=always&key=" + 
+								fbaseKey + "&query=" + movie;
+	var correction;
+	var omdb = new OMDb();
+	$.getJSON(fbaseReq,
         function(response){
-			//console.log(JSON.stringify(response.result));
-			var correction = response.correction;
-			//console.log("correction : " + correction.length);
-			if(typeof(response.correction) != 'undefined') {
-				//console.log("bestMatch : " + response.correction);
-				$("#fbaseMatch").val(correction);
-				$("#resultText").append("Freebase : " + $("#fbaseMatch").val() + "<br>");
-				console.log("fbase match : " + $("#fbaseMatch").val());
-				matchFound = true;
+			console.log("freebase search: " + movie);
+			console.log(response);
+			correction = response.correction;
+			if(typeof(correction) == 'undefined' && response.hits == 0) {
+				console.log("freebase no results");
+				omdb.search(movie);
+				return;
+			}
+			if(typeof(correction) != 'undefined') {
+				console.log("correction : " + correction);
+				utils.getMovieInfo(correction);
+				/*if(!found) {
+					omdb.search(correction);
+				}*/
 				return;
 			}
 			var matches = [];
 			$.each(response.result, function(i, match){
 				matches.push(match.name.toLowerCase());
 			});
-			bestMatch = utils.getBestMatch(movie, matches);
-			matchFound = true;
-			$("#fbaseMatch").val(bestMatch);
-			$("#resultText").append("Freebase : " + $("#fbaseMatch").val() + "<br>");
-			console.log("fbase match : " + $("#fbaseMatch").val());
-			//console.log("matches : " + matches);
-			//$("#text").text(matches);
-        });
+			utils.getMovieInfo(utils.getBestMatch(movie, matches));
+     	});
 };
 
-function OMDbSearch() {
-}
+OMDb.prototype.search = function(movie) {
+	var mWords = new String(movie).split(" ");
+	for(var i = 0; i < mWords.length; i++) {
+		if(mWords[i].length < 3)
+			continue;
+		var omdbReq = omdbURL + "?&s=" + mWords[i];
+		console.log("omdb search : " + mWords[i]);
+		$.getJSON(omdbReq,
+	        function(response) {
+				if(found)
+					return;
+				//console.log(response);
+				var matches = [];
+				if (typeof(response.Search) == 'undefined' || found) {
+					return;
+				}
+				$.each(response.Search, function(i, match){
+					matches.push(match.Title.toLowerCase());
+				});
+				utils.getMovieInfo(utils.getBestMatch(movie, matches));
+	    });
+	};
+};
 
-OMDbSearch.prototype.searchMovie = function(movie) {
-	var request = omdbURL + "?&s=" + movie;
-	$.getJSON(request,
-        function(response){
-			var matches = [];
-			if (typeof(response.Search) == 'undefined') {
+Utilities.prototype.getMovieInfo = function(movie) {
+	if(found || movie == null)
+		return;
+	var omdbReq = omdbURL + "?&t=" + movie;
+	$.getJSON(omdbReq,
+        function(response) {
+			console.log("omdb info : " + movie);
+			//console.log(response);
+			var result = "";
+			var poster = "";
+			if (typeof(response.Error) != 'undefined') {
 				return;
 			}
-			//console.log(JSON.stringify(response.Search));
-			$.each(response.Search, function(i, match){
-				//console.log(JSON.stringify(match.Title));
-				matches.push(match.Title.toLowerCase());
-			});
-			bestMatch = utils.getBestMatch(movie, matches);
-			$("#omdbMatch").val(bestMatch);
-			$("#resultText").append("OMDb : " + $("#omdbMatch").val() + "<br>");
-			console.log("omdb match : " + $("#omdbMatch").val());
-			//console.log("matches : " + matches);
-			//$("#text").text(matches);
+			result = response.Title;
+			poster = response.Poster;
+			if(typeof(result) != 'undefined') {
+				console.log("result : " + result);
+				if (poster != "N/A") {
+					$("#resultText").html(result + "<br>" + "<img src=" + poster 
+											+ "height=200 width=200/>");
+				} else {
+					$("#resultText").html(result + "<br>");
+				}
+				found = true;
+			};
         });
 };
 
-function Utilities() {
-}
-
 Utilities.prototype.getBestMatch = function(movie, matches) {
+	if(found)
+		return;
 	var strLength = movie.length;
-	var minDist = strLength, minInd = -1, curDist = -1, bestMatch;
+	var minDist = strLength, minInd = -1, curDist = -1, bestMatch = null;
 	
 	for(i in matches) {
-		//console.log(matches[i] + " " + this.editDistance(movie, matches[i], movieLength/3));
 		curDist = this.editDistance(movie, matches[i], strLength/3);
 		if (curDist != -1 && curDist < minDist) {
 			minDist = curDist;
 			minInd = i;
-		}
+		};
 	}
-	if (minInd != -1) {
+	if (minInd != -1)
 		bestMatch = matches[minInd];
-	} else {
-		bestMatch = "";
-	}
 	return bestMatch;
-//	console.log("bestMatch : " + bestMatch);
-//	$("#resultText").text(bestMatch);
 };
-
 
 Utilities.prototype.editDistance = function(p_source, p_target, p_limit) {
 	if (p_source == null) { p_source = ''; }
@@ -124,11 +149,13 @@ Utilities.prototype.editDistance = function(p_source, p_target, p_limit) {
 
 			var t_j = p_target.charAt(j-1);
 
-			if (s_i == t_j) { cost = 0; }
-			else { cost = 1; }
-
+			if (s_i == t_j) {
+				cost = 0; 
+			} else { 
+				cost = 1; 
+			}
 			d[i][j] = Math.min(d[i-1][j]+1, d[i][j-1]+1, d[i-1][j-1]+cost);
-		}
+		};
 	}
 	return d[n][m];
 };

@@ -8,13 +8,13 @@
 			var mSearch = new MovieSearch();
 			$("#movieText").keyup(function(event){
 				if(event.keyCode == 13){
-					mSearch.searchMovie($("#movieText").val());
+					mSearch.search($("#movieText").val());
 					$("#movieText").val("");
 				}
 			});	
 
 			$("#submitButton").click(function() {
-				mSearch.searchMovie($("#movieText").val());
+				mSearch.search($("#movieText").val());
 				$("#movieText").val("");
 			});
 		});		
