@@ -1,0 +1,36 @@
+/* CSS declarations go here */
+html, body {
+    height: 100%;
+	color: white; 
+	text-align:center;
+	font-size:60px;
+	background-image:url('oof-1.jpg');
+}
+
+.main {
+    height: 90%;
+    width: 100%;
+    display: table;
+}
+
+.wrapper {
+    display: table-cell;
+    height: 100%;
+    vertical-align: middle;
+    font-style: oblique;
+}
+
+.greeting {
+	font-size:32px;
+	font-style:oblique
+}
+
+
+input[type="text"], input[type="button"]
+{
+	font-size:55%;
+	text-align: center;
+    font-style: oblique;
+	color:gray;
+}
+
