@@ -13,7 +13,7 @@ MovieSearch.prototype.searchMovie = function(movie) {
 	omdb = new OMDbSearch();
 	fbase.searchMovie(movie);
 	omdb.searchMovie(movie);
-}
+};
 
 function FreebaseSearch() {
 }
@@ -28,6 +28,7 @@ FreebaseSearch.prototype.searchMovie = function(movie) {
 			if(typeof(response.correction) != 'undefined') {
 				//console.log("bestMatch : " + response.correction);
 				$("#fbaseMatch").val(correction);
+				$("#resultText").append("Freebase : " + $("#fbaseMatch").val() + "<br>");
 				console.log("fbase match : " + $("#fbaseMatch").val());
 				matchFound = true;
 				return;
@@ -39,11 +40,12 @@ FreebaseSearch.prototype.searchMovie = function(movie) {
 			bestMatch = utils.getBestMatch(movie, matches);
 			matchFound = true;
 			$("#fbaseMatch").val(bestMatch);
+			$("#resultText").append("Freebase : " + $("#fbaseMatch").val() + "<br>");
 			console.log("fbase match : " + $("#fbaseMatch").val());
 			//console.log("matches : " + matches);
 			//$("#text").text(matches);
         });
-}
+};
 
 function OMDbSearch() {
 }
@@ -63,11 +65,12 @@ OMDbSearch.prototype.searchMovie = function(movie) {
 			});
 			bestMatch = utils.getBestMatch(movie, matches);
 			$("#omdbMatch").val(bestMatch);
+			$("#resultText").append("OMDb : " + $("#omdbMatch").val() + "<br>");
 			console.log("omdb match : " + $("#omdbMatch").val());
 			//console.log("matches : " + matches);
 			//$("#text").text(matches);
         });
-}
+};
 
 function Utilities() {
 }
@@ -87,12 +90,12 @@ Utilities.prototype.getBestMatch = function(movie, matches) {
 	if (minInd != -1) {
 		bestMatch = matches[minInd];
 	} else {
-		bestMatch = ""
+		bestMatch = "";
 	}
 	return bestMatch;
 //	console.log("bestMatch : " + bestMatch);
 //	$("#resultText").text(bestMatch);
-}
+};
 
 
 Utilities.prototype.editDistance = function(p_source, p_target, p_limit) {
@@ -128,4 +131,4 @@ Utilities.prototype.editDistance = function(p_source, p_target, p_limit) {
 		}
 	}
 	return d[n][m];
-}
+};
