@@ -1,0 +1,39 @@
+<html>
+	<head>
+		<title>Library Test</title>
+		<script src="jquery-1.10.2.min.js"></script>
+		<script src="movie-search.js"></script>
+		<script>		
+		$(document).ready(function(){
+			var mSearch = new MovieSearch();
+			$("#movieText").keyup(function(event){
+				if(event.keyCode == 13){
+					mSearch.searchMovie($("#movieText").val());
+					$("#movieText").val("");
+				}
+			});	
+
+			$("#submitButton").click(function() {
+				mSearch.searchMovie($("#movieText").val());
+				$("#movieText").val("");
+			});
+		});		
+		</script>
+	</head>
+	<body>
+		<input type="hidden" id="fbaseMatch">
+		<input type="hidden" id="omdbMatch">
+		<div id="heading" align="center">
+			<h2> Result </h2>
+		</div>
+		<div id="result" align="center">
+			<textarea id="resultText" rows="10" cols="50">
+				
+			</textarea>
+		</div>
+		<div id="submit" align="center">
+		    <input type="text" id="movieText">
+			<input type="submit" id="submitButton" value="Submit">
+		</div>
+	</body>
+</html>
