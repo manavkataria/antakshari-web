@@ -78,8 +78,9 @@ function onUnsubscribeRoomDone(room)
 }
 
 function onChatReceived(chat)
-{
-    $("#chat").html("<dt class='text-danger'>"+chat.getSender() + "</dt><dd class='text-primary'>" + chat.getChat() + "</dd>" + $("#chat").html());
+{	
+	imgsrc = 'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn1/c5.5.65.65/s50x50/282965_468653659847682_8020574_t.jpg';
+    $("#chat").html($("#chat").html() + "<dd><img class='profilepic' src='"+imgsrc+"' alt=''><div class='chatTextBlock'><span class='text-danger'>" + chat.getSender() + "</span><span class='text-primary'>" + chat.getChat() + "</span></div></dd>" );
 }
 
 function joinRoom(id)
@@ -109,6 +110,8 @@ function setListeners(_warpclient){
 
 $(document).ready(function(){
     $("#roomsRow").hide();
+
+    //TODO: Trigger on enter key.
     $("#nameBtn").click(function(){
         
 		if ($("#nameText").val() != "")
