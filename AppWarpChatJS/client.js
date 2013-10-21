@@ -96,11 +96,22 @@ function leaveRoom()
     $("#roomInfo").html("Connected");
 }
 
+function setListeners(_warpclient){
+	_warpclient.setResponseListener(AppWarp.Events.onConnectDone, onConnectDone);
+	_warpclient.setResponseListener(AppWarp.Events.onGetAllRoomsDone, onGetAllRoomsDone);
+	_warpclient.setResponseListener(AppWarp.Events.onGetLiveRoomInfoDone, onGetLiveRoomInfo);
+	_warpclient.setResponseListener(AppWarp.Events.onJoinRoomDone, onJoinRoomDone);
+	_warpclient.setResponseListener(AppWarp.Events.onSubscribeRoomDone, onSubscribeRoomDone);
+	_warpclient.setResponseListener(AppWarp.Events.onLeaveRoomDone, onLeaveRoomDone);
+	_warpclient.setResponseListener(AppWarp.Events.onUnsubscribeRoomDone, onUnsubscribeRoomDone);
+	_warpclient.setNotifyListener(AppWarp.Events.onChatReceived, onChatReceived)
+}
+
 $(document).ready(function(){
     $("#roomsRow").hide();
     $("#nameBtn").click(function(){
         
-		if($("#nameText").val() != "")
+		if ($("#nameText").val() != "")
 		{
 			nameId = $("#nameText").val();
 			
@@ -110,22 +121,15 @@ $(document).ready(function(){
 			$("#roomInfo").html("Connecting...");
 			AppWarp.WarpClient.initialize(apiKey, secreteKey);
 			_warpclient = AppWarp.WarpClient.getInstance();
-			_warpclient.setResponseListener(AppWarp.Events.onConnectDone, onConnectDone);
-			_warpclient.setResponseListener(AppWarp.Events.onGetAllRoomsDone, onGetAllRoomsDone);
-			_warpclient.setResponseListener(AppWarp.Events.onGetLiveRoomInfoDone, onGetLiveRoomInfo);
-			_warpclient.setResponseListener(AppWarp.Events.onJoinRoomDone, onJoinRoomDone);
-			_warpclient.setResponseListener(AppWarp.Events.onSubscribeRoomDone, onSubscribeRoomDone);
-			_warpclient.setResponseListener(AppWarp.Events.onLeaveRoomDone, onLeaveRoomDone);
-			_warpclient.setResponseListener(AppWarp.Events.onUnsubscribeRoomDone, onUnsubscribeRoomDone);
-			_warpclient.setNotifyListener(AppWarp.Events.onChatReceived, onChatReceived);
+			setListeners(_warpclient);
 			_warpclient.connect(nameId);
 		}
     });
 	
 	$("#chatBtn").click(function(){
-        if(inRoom == true)
+        if (inRoom == true)
         {
-            if($("#chatText").val() != "")
+            if ($("#chatText").val() != "")
             {
                 _warpclient.sendChat($("#chatText").val());
                 $("#chatText").val("");
