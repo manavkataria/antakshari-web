@@ -229,8 +229,12 @@ $(function() {
 
   $(".chat-input input").keypress(function(e) {
     var inputText = $(this).val().trim();
+
     if(e.which == 13 && inputText) {
-      var chunks = inputText.match(/.{1,1024}/g)
+    	var movieSearch = new MovieSearch();
+    	var response = movieSearch.getResponse(inputText, socket);
+    	console.log("response returned : " + response);
+      	var chunks = inputText.match(/.{1,1024}/g)
         , len = chunks.length;
 
       for(var i = 0; i<len; i++) {

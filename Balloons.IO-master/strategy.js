@@ -4,7 +4,7 @@
  */
 
 var passport = require('passport')
-  , TwitterStrategy = require('passport-twitter').Strategy
+  , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
   , FacebookStrategy = require('passport-facebook').Strategy 
 
 /**
@@ -32,17 +32,19 @@ function Strategy (app) {
     done(null, user);
   });
 
-  if(config.auth.twitter.consumerkey.length) {
-    passport.use(new TwitterStrategy({
-        consumerKey: config.auth.twitter.consumerkey,
-        consumerSecret: config.auth.twitter.consumersecret,
-        callbackURL: config.auth.twitter.callback
+  if(config.auth.google.clientid.length) {
+    passport.use(new GoogleStrategy({
+        clientID: config.auth.google.clientid,
+        clientSecret: config.auth.google.clientsecret,
+        callbackURL: config.auth.google.callback
       },
-      function(token, tokenSecret, profile, done) {
-        return done(null, profile);
-      }
+    function(accessToken, refreshToken, profile, done) {
+    	User.findOrCreate({ googleId: profile.id }, function (err, user) {
+      	return done(err, user);
+    	});
+    }
     ));
-  } 
+  }
 
   if(config.auth.facebook.clientid.length) {
     passport.use(new FacebookStrategy({

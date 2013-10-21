@@ -43,15 +43,16 @@ function Routes (app) {
    * Authentication routes
    */
 
-  if(config.auth.twitter.consumerkey.length) {
-    app.get('/auth/twitter', passport.authenticate('twitter'));
-
-    app.get('/auth/twitter/callback', 
-      passport.authenticate('twitter', {
-        successRedirect: '/',
-        failureRedirect: '/'
-      })
-    );
+  if(config.auth.google.clientid.length) {
+	app.get('/auth/google',
+  		passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/userinfo.profile',
+                                            'https://www.googleapis.com/auth/userinfo.email'] }));
+	app.get('http://127.0.0.1:6789/oauth2callback', 
+  		passport.authenticate('google', { 
+			successRedirect: '/',
+			failureRedirect: '/'
+		})
+	);
   }
 
   if(config.auth.facebook.clientid.length) {

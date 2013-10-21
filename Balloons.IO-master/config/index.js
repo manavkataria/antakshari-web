@@ -36,7 +36,7 @@ function Config (app) {
     log("Failed to load file config.json %j", err);
   }
 
-  log('Attemp to load from environment');
+  log('Attempt to load from environment');
   utils.merge(config, env);
 
   log('Save configuration values in app %j', config);

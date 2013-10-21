@@ -16,10 +16,10 @@ module.exports = {
       clientsecret: env.FB_CLIENT_SECRET,
       callback: env.FB_CALLBACK
     },
-    twitter: {
-      consumerkey: env.TW_CONSUMER_KEY,
-      consumersecret: env.TW_CONSUMER_SECRET,
-      callback: env.TW_CALLBACK
+    google: {
+      consumerkey: env.GL_CONSUMER_KEY,
+      consumersecret: env.GL_CONSUMER_SECRET,
+      callback: env.GL_CALLBACK
     }
   },
   session: {

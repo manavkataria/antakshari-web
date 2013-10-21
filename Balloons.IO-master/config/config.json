@@ -1,0 +1,24 @@
+{
+  "redisURL": "http://localhost/",
+  "auth": {
+    "google": {
+      "clientid" : "246954828403-1pdtgnbqmv7upt6m8no1blnl7ucca8sk.apps.googleusercontent.com",
+      "clientsecret" : "3WVDrwwsRmhcOV-AGzAVUCIk",
+      "callback" : "http://127.0.0.1:6789/oauth2callback"
+    },
+    "facebook": {
+      "clientid" : "456633154458063",
+      "clientsecret" : "c9e68aa2a4b675057f812cbfa951df7f",
+      "callback" : "http://127.0.0.1:6789/auth/facebook/callback"
+    }
+  },
+  "session" : {
+    "secret" : "yourbestsecret"
+  },
+  "app": {
+    "port": 6789
+  },
+  "theme": {
+    "name" : "default"
+  }
+}
