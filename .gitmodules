@@ -1,0 +1,3 @@
+[submodule "Balloons.IO-chat-module"]
+	path = Balloons.IO-chat-module
+	url = https://github.com/gravityonmars/Balloons.IO
