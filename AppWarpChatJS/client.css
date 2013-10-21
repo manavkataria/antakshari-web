@@ -1,0 +1,17 @@
+#chat dd{
+  padding-bottom: 2px;
+}
+.chatTextBlock {
+  display: inline-block;
+  vertical-align: middle;
+}
+.text-danger {
+  display: block;
+  font-weight: bold;             
+}
+.text-primary {
+  display: block;
+}
+.profilepic {
+  margin-right: 8px;
+}
