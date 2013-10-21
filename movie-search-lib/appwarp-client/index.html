@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Chat</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="bootstrap.min.css">
+        <script src="jquery-1.10.2.min.js"></script>
+        <script src="bootstrap.min.js"></script>
+        <script src="appwarp.min.js"></script>
+        <script src="movie-search.js"></script>
+        <script type="text/javascript">
+            var apiKey = "cd0c606f57cf8505e32d9f3e7ace959754ed17289cc80a0c10bf55fb178dcd67";
+            var secreteKey = "34f00f6bd4b0bb385bc735cee4dbc1d09ae7bc39724747d2698ebd3e085a19f3";
+			
+            var _movieSearch;
+            var _warpclient;
+            var nameId = "";
+            var usersText = "";
+            var inLobby = false;
+            var roomId = "";
+            
+            function onConnectDone(res) {
+                if(res == AppWarp.ResultCode.Success) {
+                    $("#roomInfo").html("Connected");
+                    $("#chat").html("Connecting to lobby!!!!");
+                    _warpclient.joinLobby();
+                    _warpclient.getLiveLobbyInfo();
+                } else {
+                    $("#roomInfo").html("Error in Connection");
+                }
+            }
+            
+            function onGetLiveLobbyInfoDone(res) {
+                for(var i=0; i<res.getUsers().length; ++i) {
+                    _warpclient.getLiveUserInfo(res.getUsers()[i]);
+                }            
+            }
+            
+            function onGetLiveUserInfoDone(user) {
+                usersText += '<li><a href="#" onClick="">' + user.getName() + '</a></li>';
+                $("#usersList").html(usersText);
+                //$("#chat").html("Select a room");
+            }
+            
+            function onJoinLobbyDone(room) {
+                if(room.getResult() == AppWarp.ResultCode.Success) {
+                    _warpclient.subscribeLobby();
+                }
+            }
+            
+            function onSubscribeLobbyDone(room) {
+                if(room.getResult() == AppWarp.ResultCode.Success) {
+                    inLobby = true;
+                    //roomId = room.getRoomId();
+                    $("#roomInfo").html("Joined Lobby");
+                    $("#chat").html("");
+                    $("#roomsList").html('<button id="leaveBtn" onClick="leaveLobby()" type="button" class="btn btn-primary">Leave Lobby</button>');
+                   // $("#roomsList").html('Users');
+                }
+            }
+            
+            function onLeaveLobbyDone(room) {
+                if(room.getResult() == AppWarp.ResultCode.Success) {
+                    _warpclient.unsubscribeLobby();
+                }
+            }
+            
+            function onUnsubscribeLobbyDone(room) {
+                if(room.getResult() == AppWarp.ResultCode.Success) {
+                    inLobby = false;
+                    //_warpclient.getAllRooms();
+                    $("#chat").html("");
+                }
+            }
+            
+            function onChatReceived(chat) {
+                $("#chat").html("<dt class='text-danger'>"+chat.getSender() + "</dt><dd class='text-primary'>" + chat.getChat() + "</dd>" + $("#chat").html());
+            }
+            
+            function joinLobby() {
+                if(inRoom == false) {
+                    _warpclient.joinLobby();
+                }
+            }
+            
+            function leaveLobby() {
+                _warpclient.leaveLobby();
+                $("#roomInfo").html("Connected");
+            }
+            
+            $(document).ready(function() {
+                $("#roomsRow").hide();
+                $("#nameBtn").click(function() {
+                    
+					if($("#nameText").val() != "") {
+						nameId = $("#nameText").val();
+						
+						$("#nameRow").hide();
+						$("#roomsRow").show();
+									
+						$("#roomInfo").html("Connecting...");
+						AppWarp.WarpClient.initialize(apiKey, secreteKey);
+						_movieSearch = new MovieSearch();
+						_warpclient = AppWarp.WarpClient.getInstance();
+						_warpclient.setResponseListener(AppWarp.Events.onConnectDone, onConnectDone);
+						//_warpclient.setResponseListener(AppWarp.Events.onGetAllRoomsDone, onGetAllRoomsDone);
+						_warpclient.setResponseListener(AppWarp.Events.onGetLiveLobbyInfoDone, onGetLiveLobbyInfoDone);
+						_warpclient.setResponseListener(AppWarp.Events.onGetLiveUserInfoDone, onGetLiveUserInfoDone);
+						_warpclient.setResponseListener(AppWarp.Events.onJoinLobbyDone, onJoinLobbyDone);
+						_warpclient.setResponseListener(AppWarp.Events.onSubscribeLobbyDone, onSubscribeLobbyDone);
+						_warpclient.setResponseListener(AppWarp.Events.onLeaveLobbyDone, onLeaveLobbyDone);
+						_warpclient.setResponseListener(AppWarp.Events.onUnsubscribeLobbyDone, onUnsubscribeLobbyDone);
+						_warpclient.setNotifyListener(AppWarp.Events.onChatReceived, onChatReceived);
+						_warpclient.connect(nameId);
+					}
+                });
+				
+				$("#chatBtn").click(function() {
+                    if(inLobby == true) {
+                    	var chat = $("#chatText").val();
+                        if($(chat != "") {
+                            _warpclient.sendChat($("#chatText").val());
+                            $("#chatText").val("");
+                        }
+                    }
+                });
+            });
+        </script>
+        <style>
+            #chat dd{
+                padding-bottom: 2px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row" id="nameRow">
+              <div class="col-md-4 col-md-offset-4 text-center">
+                  <h1>The Chat App</h1>
+                  <h3>Powered by AppWarp</h3>
+                  <div class="well">
+					<form role="form">
+					  <div class="form-group">
+						<label for="nameText">Your Name</label>
+						<input type="text" class="form-control" id="nameText" placeholder="Enter Your Name"><br/>
+						<button id="nameBtn" type="button" class="btn btn-primary">Continue</button>
+					  </div>
+                    </form>
+                  </div>
+              </div>
+            </div>
+            <div class="row" id="roomsRow">
+                    <div class="col-md-2 well">
+                        <h4>Rooms</h4>
+                        <ul class="nav nav-pills nav-stacked" id="roomsList">
+                        </ul>
+                        <ul class="nav nav-pills nav-stacked" id="usersList">
+                        </ul>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="alert alert-info" id="roomInfo">
+                            No room selected
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-default">
+                                  <div class="panel-heading">
+                                      <div class="row">
+                                          <div class="col-md-11">
+                                            <input type="text" class="form-control" id="chatText" placeholder="type here...">
+                                          </div>
+                                          <div class="col-md-1">
+                                            <button id="chatBtn" type="button" class="btn btn-primary">Send</button>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="panel-body">
+                                      <dl id="chat">
+                                          Please wait!!!
+                                      </dl>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </body>
+</html>
