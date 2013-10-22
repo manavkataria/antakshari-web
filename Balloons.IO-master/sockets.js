@@ -113,6 +113,46 @@ function Sockets (app, server) {
       }   
     });
 
+    socket.on('movie info', function(data) {
+        var no_empty = data.msg;
+        if(no_empty.length > 0) {
+          var chatlogRegistry = {
+            type: 'movinfo',
+            from: userKey,
+            atTime: new Date(),
+            withData: data.msg
+          }
+
+          // chatlogWriteStream.write(JSON.stringify(chatlogRegistry) + "\n");
+          
+          io.sockets.in(room_id).emit('movie info', {
+            nickname: nickname,
+            provider: provider,
+            poster: data.msg
+          });        
+        }   
+      });
+
+    socket.on('movie title', function(data) {
+        var no_empty = data.msg;
+        if(no_empty.length > 0) {
+          var chatlogRegistry = {
+            type: 'movtitle',
+            from: userKey,
+            atTime: new Date(),
+            withData: data.msg
+          }
+
+          // chatlogWriteStream.write(JSON.stringify(chatlogRegistry) + "\n");
+          
+          io.sockets.in(room_id).emit('movie title', {
+            nickname: nickname,
+            provider: provider,
+            msg: data.msg
+          });        
+        }   
+      });
+
     socket.on('set status', function(data) {
       var status = data.status;
 

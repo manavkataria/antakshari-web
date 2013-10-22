@@ -3,7 +3,9 @@ var fbaseKey = "AIzaSyDg3Mx_26umohj8Z_fCDdEufoNn1gry3QE";
 var omdbURL = "http://www.omdbapi.com/";
 var utils;
 var fbase;
-var found = false;
+var titleFound = false;
+var infoFound = false;
+var matchCallback, infoCallback;
 
 function MovieSearch() {
 	utils = new Utilities();
@@ -14,22 +16,24 @@ function Freebase() {}
 function OMDb() {}
 function Utilities() {}
 
-MovieSearch.prototype.getResponse = function(movie, socket) {
+MovieSearch.prototype.getResponse = function(movie, callback) {
 	var fbaseReq = fbaseURL + "?filter=(any type:/film/film)&limit=5&spell=always&key=" + fbaseKey + "&query=" + movie;
-	var omdbReq = omdbURL + "?&s=" + movie;
-	$.getJSON(omdbReq,
+	$.getJSON(fbaseReq,
 		function(response) {
-			socket.emit('my msg', { msg: "response"});
-			return response;
+			//socket.emit('my msg', { msg: "response"});
+			callback(response);
 		}
 	);
 };
 
-MovieSearch.prototype.search = function(movie) {
+MovieSearch.prototype.search = function(movie, mCallback, iCallback) {
 	if(typeof(movie) == 'undefined')
 		return;
-	found = false;
-	return fbase.search(movie);
+	titleFound = false;
+	infoFound = false;
+	matchCallback = mCallback;
+	infoCallback = iCallback;
+	fbase.search(movie);
 };
 
 Freebase.prototype.search = function(movie) {
@@ -38,27 +42,34 @@ Freebase.prototype.search = function(movie) {
 	var omdb = new OMDb();
 	$.getJSON(fbaseReq,
         function(response){
-			console.log("freebase search: " + movie);
-			console.log(response);
-			correction = response.correction;
-			if(typeof(correction) == 'undefined' && response.hits == 0) {
-				console.log("freebase no results");
-				//omdb.search(movie);
-				return;
+		console.log("freebase search: " + movie);
+		console.log(response);
+		correction = response.correction;
+		if(typeof(correction) == 'undefined' && response.hits == 0) {
+			console.log("freebase no results");
+			omdb.search(movie);
+		}
+		if(typeof(correction) != 'undefined') {
+			console.log("correction : " + correction);
+			if(!titleFound) {
+				matchCallback(correction);
+				titleFound = true;
+				utils.getMovieInfo(correction);
 			}
-			if(typeof(correction) != 'undefined') {
-				console.log("correction : " + correction);
-				return utils.getMovieInfo(correction);
-				/*if(!found) {
-					omdb.search(correction);
-				}*/
-				return;
-			}
-			var matches = [];
-			$.each(response.result, function(i, match){
-				matches.push(match.name.toLowerCase());
-			});
-			return utils.getMovieInfo(utils.getBestMatch(movie, matches));
+			/*if(!found) {
+				omdb.search(correction);
+			}*/
+		}
+		var matches = [];
+		$.each(response.result, function(i, match){
+			matches.push(match.name.toLowerCase());
+		});
+		var bestMatch = utils.getBestMatch(movie, matches);
+		if(!titleFound) {
+			matchCallback(bestMatch);
+			titleFound = true;
+		}
+		utils.getMovieInfo(bestMatch);
      	});
 };
 
@@ -71,52 +82,44 @@ OMDb.prototype.search = function(movie) {
 		console.log("omdb search : " + mWords[i]);
 		$.getJSON(omdbReq,
 	        function(response) {
-				if(found)
-					return;
 				//console.log(response);
 				var matches = [];
-				if (typeof(response.Search) == 'undefined' || found) {
-					return;
+				if (typeof(response.Search) != 'undefined' &&  !titleFound) {
+					$.each(response.Search, function(i, match){
+						matches.push(match.Title.toLowerCase());
+					});
+					utils.getMovieInfo(utils.getBestMatch(movie, matches));
 				}
-				$.each(response.Search, function(i, match){
-					matches.push(match.Title.toLowerCase());
-				});
-				utils.getMovieInfo(utils.getBestMatch(movie, matches));
 	    });
 	};
 };
 
 Utilities.prototype.getMovieInfo = function(movie) {
-	if(found || movie == null)
+	if(infoFound || movie == null)
 		return;
 	var omdbReq = omdbURL + "?&t=" + movie;
 	$.getJSON(omdbReq,
         function(response) {
 			console.log("omdb info : " + movie);
 			//console.log(response);
-			var result = "";
-			var poster = "";
-			if (typeof(response.Error) != 'undefined') {
-				return;
-			}
-			result = response.Title;
-			poster = response.Poster;
+			var result = response.Title;
+			var poster = response.Poster;
 			if(typeof(result) != 'undefined') {
 				console.log("result : " + result);
-				if (poster != "N/A") {
-					$("#resultText").html(result + "<br>" + "<img src=" + poster + "height=200 width=200/>");
-					result = result + "<br>" + "<img src=" + poster + "height=200 width=200/>";
-				} else {
-					$("#resultText").html(result + "<br>");
+				if (poster == "N/A") {
+					poster = "../img/icon-user.png"
 				}
-				found = true;
-				return result;
+				console.log("poster : " + poster);
+				if(!infoFound) {
+					infoCallback(poster);
+					infoFound = true;
+				}
 			};
         });
 };
 
 Utilities.prototype.getBestMatch = function(movie, matches) {
-	if(found)
+	if(titleFound)
 		return;
 	var strLength = movie.length;
 	var minDist = strLength, minInd = -1, curDist = -1, bestMatch = null;
