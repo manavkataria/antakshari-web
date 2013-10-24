@@ -16,9 +16,7 @@ function onConnectDone(res)
         _warpclient.getAllRooms();
         
         experiment(_warpclient);
-    }
-    else
-    {
+    } else {
         $("#roomInfo").html("Error in Connection");
     }
 }
@@ -91,11 +89,10 @@ function onChatReceived(chat)
 function joinRoom(id)
 {
     console.log('Request joinRoom: ' + id);
-    if(inRoom == false)
+    if (inRoom == false)
     {
         _warpclient.joinRoom(id);
-    } else 
-    {
+    } else {
         console.warn('Already in another room: ' + roomId);
     }
 }
@@ -106,7 +103,7 @@ function leaveRoom()
     $("#roomInfo").html("Connected");
 }
 
-function setListeners(_warpclient){
+function setListeners(_warpclient) {
 	_warpclient.setResponseListener(AppWarp.Events.onConnectDone, onConnectDone);
 	_warpclient.setResponseListener(AppWarp.Events.onGetAllRoomsDone, onGetAllRoomsDone);
 	_warpclient.setResponseListener(AppWarp.Events.onGetLiveRoomInfoDone, onGetLiveRoomInfo);
@@ -115,8 +112,11 @@ function setListeners(_warpclient){
 	_warpclient.setResponseListener(AppWarp.Events.onLeaveRoomDone, onLeaveRoomDone);
 	_warpclient.setResponseListener(AppWarp.Events.onUnsubscribeRoomDone, onUnsubscribeRoomDone);
 	_warpclient.setResponseListener(AppWarp.Events.onCreateRoomDone, onCreateRoomDone);
-
-    _warpclient.setNotifyListener(AppWarp.Events.onChatReceived, onChatReceived)
+    _warpclient.setResponseListener(AppWarp.Events.onSendMoveDone, onSendMoveDone);
+    
+    _warpclient.setNotifyListener(AppWarp.Events.onChatReceived, onChatReceived);
+    _warpclient.setNotifyListener(AppWarp.Events.onMoveCompleted, onMoveCompleted);
+    
 }
 
 function onCreateRoomDone(room) {
@@ -133,6 +133,20 @@ function onCreateRoomDone(room) {
 function experiment(wc) {
     wc.createTurnRoom("TurnRoom", "MK", 2, null, 10);
     console.log("Create Turn Room Invoked");
+}
+
+function sendMove(msg) {
+    console.log('sendMove: ' + msg);
+    _warpclient.sendMove(msg);
+}
+
+function onSendMoveDone(event) {
+    console.log('onSendMoveDone: Event#' + event);
+}
+
+function onMoveCompleted(moveData) {
+    console.log('onMoveCompleted: ');
+    console.log(moveData);
 }
 
 $(document).ready(function(){
@@ -159,10 +173,21 @@ $(document).ready(function(){
 	$("#chatBtn").click(function(){
         if (inRoom == true)
         {
-            if ($("#chatText").val() != "")
+            chatMessage = $("#chatText").val();
+            //TODO: Important! Do Sanity Check / SQL Injection (Bobby Tables)!
+
+            if ( chatMessage != "")
             {
-                _warpclient.sendChat($("#chatText").val());
-                $("#chatText").val("");
+                _warpclient.sendChat(chatMessage);
+                sendMove(chatMessage);
+                /*
+                if (room.type == turnbased ) {
+                    // if (true == isValidMovieName(chatMessage)) 
+                    // need this to avoid accidental matching of chatText to MovieName
+                    sendMove(chatMessage);        
+                }
+                */
+                $("#chatText").val(""); 
             }
         }
     });
