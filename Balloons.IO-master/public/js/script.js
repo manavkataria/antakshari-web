@@ -171,9 +171,9 @@ $(function() {
 	    data.time = timeParser(time)
 
 	    if($lastInput.hasClass('chat-box') && lastInputUserKey === data.provider + ':' + data.nickname) {
-	      $lastInput.append(parseChatBoxMsg(ich.chat_box_text(data)));
+	      $lastInput.append(ich.chat_box_text(data));
 	    } else {
-	      $('.chat .current').append(parseChatBox(ich.chat_box(data)));
+	      $('.chat .current').append(ich.chat_box(data));
 	    }
 
 	    $('.chat').scrollTop($('.chat').prop('scrollHeight'));
@@ -191,7 +191,7 @@ $(function() {
             $lastInput = $('.chat .current').children().last(),
             lastInputUserKey = $lastInput.data('provider') + ':' + $lastInput.data('user');
 
-        data.type = 'movinfo';
+        data.type = 'chat';
         data.time = timeParser(time)
 
         if($lastInput.hasClass('chat-box') && lastInputUserKey === data.provider + ':' + data.nickname) {
@@ -278,17 +278,17 @@ $(function() {
   });
 
   function onMovieMatch(resp) {
-	console.log("movie match found");
+	console.log("movie title found");
 	var chatMsg =  resp;
 	socket.emit('movie title', { msg: chatMsg });
-	console.log(resp);
+	//console.log(resp);
   }
 
   function onMovieInfoFound(resp) {
 	console.log("movie info found");
 	var chatMsg =  resp;
 	socket.emit('movie info', { msg: chatMsg });
-	console.log(resp);
+	//console.log(resp);
   }
 
   $(".chat-input input").keypress(function(e) {

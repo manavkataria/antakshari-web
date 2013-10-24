@@ -6,7 +6,8 @@
 var sio = require('socket.io')
   , parseCookies = require('connect').utils.parseSignedCookies
   , cookie = require('cookie')
-  , fs = require('fs');
+  , fs = require('fs')
+  , utils = require('./utils');
 
 /**
  * Expose Sockets initialization
@@ -115,9 +116,21 @@ function Sockets (app, server) {
 
     socket.on('movie info', function(data) {
         var no_empty = data.msg;
+        if (data.msg == null)
+        	return;
+        var poster = data.msg;
+    	var pDir = './public/img/posters/';
+    	var pName = poster.substring(poster.lastIndexOf('/') + 1, poster.length);
+    	var pLoc = pDir + pName;
+    	console.log("downloading poster : " + pLoc);
+    	var pImg = '/img/posters/' + pName;
+    	//var pImg 
+    	console.log("img tag location " + pImg);
+			setTimeout(utils.downloadPoster(data.msg, pLoc), 5000);
+        //utils.downloadPoster(data.msg, pLoc);
         if(no_empty.length > 0) {
           var chatlogRegistry = {
-            type: 'movinfo',
+            type: 'chat',
             from: userKey,
             atTime: new Date(),
             withData: data.msg
@@ -128,7 +141,7 @@ function Sockets (app, server) {
           io.sockets.in(room_id).emit('movie info', {
             nickname: nickname,
             provider: provider,
-            poster: data.msg
+            poster: pImg
           });        
         }   
       });
@@ -137,7 +150,7 @@ function Sockets (app, server) {
         var no_empty = data.msg;
         if(no_empty.length > 0) {
           var chatlogRegistry = {
-            type: 'movtitle',
+            type: 'chat',
             from: userKey,
             atTime: new Date(),
             withData: data.msg

@@ -95,8 +95,7 @@ Utilities.prototype.getMovieInfo = function(movie) {
 			if(typeof(result) != 'undefined') {
 				console.log("result : " + result);
 				if (poster != "N/A") {
-					$("#resultText").html(result + "<br>" + "<img src=" + poster 
-											+ "height=200 width=200/>");
+					$("#resultText").html(result + "<br>" + "<img src=" + poster + ">");
 				} else {
 					$("#resultText").html(result + "<br>");
 				}

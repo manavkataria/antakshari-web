@@ -28,10 +28,15 @@ module.exports = Config;
  */
 
 function Config (app) {
-  log("Attempt to load from config.json")
+  log("Attempt to load from config")
   try {
-    config = require('./config.json');
-    log('Loaded from config.json %j', config);
+		if(process.env.REDISTOGO_URL) {
+    	config = require('./remote-config.json');
+    	log('Loaded from remote-config.json %j', config);
+		} else {
+    	config = require('./local-config.json');
+    	log('Loaded from local-config.json %j', config);
+		}
   } catch (err) {
     log("Failed to load file config.json %j", err);
   }

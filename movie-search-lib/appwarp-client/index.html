@@ -118,8 +118,8 @@
 				$("#chatBtn").click(function() {
                     if(inLobby == true) {
                     	var chat = $("#chatText").val();
-                        if($(chat != "") {
-                            _warpclient.sendChat($("#chatText").val());
+                        if(chat != "") {
+                            _warpclient.sendChat(chat);
                             $("#chatText").val("");
                         }
                     }

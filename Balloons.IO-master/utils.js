@@ -1,5 +1,16 @@
 var crypto = require('crypto')
-  , type = require('component-type');
+  , type = require('component-type')
+  , request = require('request')
+  , fs = require('fs');
+
+/*
+ * Download movie poster
+ */
+
+exports.downloadPoster = function(poster, pLoc) {
+	console.log("poster : " + poster + " loc : " + pLoc);
+	request(poster).pipe(fs.createWriteStream(pLoc));
+}
 
 /*
  * Restrict paths

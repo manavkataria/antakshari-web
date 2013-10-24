@@ -106,11 +106,17 @@ Utilities.prototype.getMovieInfo = function(movie) {
 			var poster = response.Poster;
 			if(typeof(result) != 'undefined') {
 				console.log("result : " + result);
+				//console.log("poster : " + poster);
 				if (poster == "N/A") {
-					poster = "../img/icon-user.png"
+					poster = "../img/icon-user.png";
+					console.log("poster : " + poster);
+				} else {
+					//poster = "http://ia.media-imdb.com/images/M/MV5BMjExNzM0NDM0N15BMl5BanBnXkFtZTcwMzkxOTUwNw@@._V1_SX300.jpg";
+					console.log("poster : " + poster);
 				}
-				console.log("poster : " + poster);
+				//poster = "http://ia.media-imdb.com/images/M/MV5BMjExNzM0NDM0N15BMl5BanBnXkFtZTcwMzkxOTUwNw@@._V1_SX300.jpg";
 				if(!infoFound) {
+					//console.log(poster);
 					infoCallback(poster);
 					infoFound = true;
 				}
