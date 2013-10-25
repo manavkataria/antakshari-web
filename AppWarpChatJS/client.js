@@ -12,10 +12,15 @@ function onConnectDone(res)
     if(res == AppWarp.ResultCode.Success)
     {
         $("#roomInfo").html("Connected");
-        $("#chat").html("Getting Rooms & Creating Dynamic Room...");
+        $("#chat").html("Fetching Rooms & Users...");
         _warpclient.getAllRooms();
+        _warpclient.getOnlineUsers();
         
-        experiment(_warpclient);
+        // Create Dynamic Turn Based Room 
+        // experiment(_warpclient);
+
+        //This would Quickly Join a room (if exists) with 1 user in it. 
+        _warpclient.joinRoomInRange(1,1,1);
     } else {
         $("#roomInfo").html("Error in Connection");
     }
@@ -29,13 +34,20 @@ function onGetAllRoomsDone(rooms)
     {
         _warpclient.getLiveRoomInfo(rooms.getRoomIds()[i]);
     }
-    
 }
 
 function onGetLiveRoomInfo(room)
 {
-    console.log("onGetLiveRoomInfo");
-    roomsText += '<li><a href="#" onClick="joinRoom(\''+room.getRoom().getRoomId()+'\')">' + room.getRoom().getName() + '</a></li>';
+    /* Delete Dead Turn Rooms
+    if (room.getRoom().getName() == 'TurnRoom') {
+        _warpclient.deleteRoom(room.getRoom().getRoomId());
+        return;
+    }  */
+
+    //Populate Room List
+    //console.log("onGetLiveRoomInfo: " + room.getRoom().getName());
+    roomsText += '<li><a href="#" onClick="joinRoom(\''+ room.getRoom().getRoomId() +'\')">' + room.getRoom().getName() + '(' + room.getUsers().length + ')</a></li>';
+
     $("#roomsList").html(roomsText);
     $("#chat").html("Select a room");
 }
@@ -57,7 +69,7 @@ function onSubscribeRoomDone(room)
         inRoom = true;
         roomId = room.getRoomId();
         $("#roomInfo").html("Joined Room: " + room.getName());
-        $("#chat").html("Welcome to Room: " + room.getName());
+        $("#chat").html("Welcome to Room: " + room.getName() + '<br>');
         $("#roomsList").html('<button id="leaveBtn" onClick="leaveRoom()" type="button" class="btn btn-primary">Leave Room</button>');
     }
 }
@@ -86,6 +98,7 @@ function onChatReceived(chat)
     $("#chat").html($("#chat").html() + "<dd><img class='profilepic' src='"+imgsrc+"' alt=''><div class='chatTextBlock'><span class='text-danger'>" + chat.getSender() + "</span><span class='text-primary'>" + chat.getChat() + "</span></div></dd>" );
 }
 
+//Join and Subscribe a Chat Room
 function joinRoom(id)
 {
     console.log('Request joinRoom: ' + id);
@@ -103,6 +116,47 @@ function leaveRoom()
     $("#roomInfo").html("Connected");
 }
 
+function onGetOnlineUsersDone(userList) {
+    console.log('onGetOnlineUsersDone');
+    console.log(userList);
+
+    if (userList.getResult() == AppWarp.ResultCode.Success)
+    {
+        usernames = userList.getUsernames();
+        
+        usersText = "";
+        $("#usersList").html(usersText);
+
+        for(var i=0; i<usernames.length; ++i)
+        {
+            usersText += '<li id=\"'+ usernames[i] +'\">'+ usernames[i] +'</li>';
+        }
+        $("#usersList").html(usersText);
+    }
+}
+
+function onDeleteRoomDone(room) {
+    console.log('onDeleteRoomDone: ');
+    
+    if (room.getResult() == AppWarp.ResultCode.Success)
+    {   
+        console.log(room.getName() + 'id: ' + room.getRoomId());
+    }
+}
+
+function onGetMatchedRoomsDone(matchedRoomEvent) {
+    console.log('onGetMatchedRoomsDone: ');
+    
+    if (matchedRoomEvent.getResult() == AppWarp.ResultCode.Success) {
+        roomList = matchedRoomEvent.getRooms();
+
+        for (var i=0; i<roomList.length; i++) {
+            console.log(roomList[i].name);
+        }
+    }
+}
+
+
 function setListeners(_warpclient) {
 	_warpclient.setResponseListener(AppWarp.Events.onConnectDone, onConnectDone);
 	_warpclient.setResponseListener(AppWarp.Events.onGetAllRoomsDone, onGetAllRoomsDone);
@@ -113,10 +167,15 @@ function setListeners(_warpclient) {
 	_warpclient.setResponseListener(AppWarp.Events.onUnsubscribeRoomDone, onUnsubscribeRoomDone);
 	_warpclient.setResponseListener(AppWarp.Events.onCreateRoomDone, onCreateRoomDone);
     _warpclient.setResponseListener(AppWarp.Events.onSendMoveDone, onSendMoveDone);
+    _warpclient.setResponseListener(AppWarp.Events.onGetOnlineUsersDone, onGetOnlineUsersDone);
+    _warpclient.setResponseListener(AppWarp.Events.onDeleteRoomDone, onDeleteRoomDone);
+    _warpclient.setResponseListener(AppWarp.Events.onGetMatchedRoomsDone, onGetMatchedRoomsDone);
     
     _warpclient.setNotifyListener(AppWarp.Events.onChatReceived, onChatReceived);
     _warpclient.setNotifyListener(AppWarp.Events.onMoveCompleted, onMoveCompleted);
-    
+    _warpclient.setNotifyListener(AppWarp.Events.onUserJoinedRoom, onUserJoinedRoom);
+    _warpclient.setNotifyListener(AppWarp.Events.onUserLeftRoom, onUserLeftRoom);
+
 }
 
 function onCreateRoomDone(room) {
@@ -131,7 +190,7 @@ function onCreateRoomDone(room) {
 }
 
 function experiment(wc) {
-    wc.createTurnRoom("TurnRoom", "MK", 2, null, 10);
+    wc.createTurnRoom("TurnRoom", "MK", 2, null, 1000);
     console.log("Create Turn Room Invoked");
 }
 
@@ -140,18 +199,51 @@ function sendMove(msg) {
     _warpclient.sendMove(msg);
 }
 
-function onSendMoveDone(event) {
-    console.log('onSendMoveDone: Event#' + event);
+function onSendMoveDone(move) {
+    console.log('onSendMoveDone: Event#' + move);
 }
 
-function onMoveCompleted(moveData) {
+function onMoveCompleted(move) {
     console.log('onMoveCompleted: ');
-    console.log(moveData);
+    console.log(move);
+
+    //populate UI
+    chatHtml = $("#chat").html();
+    chatHtml += move.getSender() +  ' Played a Move: \"' + move.getMoveData() + '\"';
+    //chatHtml += '<br> Next Turn: ' + ;
+
+    $("#usersList #" + move.getSender()).removeClass('NextTurn');
+    $("#usersList #" + move.getNextTurn()).addClass('NextTurn');
+
+    $("#chat").html(chatHtml);
 }
+
+function onUserJoinedRoom (room, username) {
+    //TODO: Add a css class to system message
+    systemMsg = username + ' Joined Room <br>';
+    $("#chat").html($("#chat").html() + systemMsg);
+}
+
+function onUserLeftRoom (room, username) {
+    //TODO: Add a css class to system message
+    systemMsg = username + ' Left Room <br>';
+    $("#chat").html($("#chat").html() + systemMsg);
+}
+
+//initialize AppWarp
+function Init() {
+    AppWarp.WarpClient.initialize(apiKey, secreteKey);
+    _warpclient = AppWarp.WarpClient.getInstance();
+    setListeners(_warpclient); 
+}
+
+
+//Does not need DOM.
+Init();
 
 $(document).ready(function(){
     $("#roomsRow").hide();
-
+    
     //TODO/FIXME: Trigger on enter key.
     $("#nameBtn").click(function(){
         
@@ -163,9 +255,6 @@ $(document).ready(function(){
 			$("#roomsRow").show();
 						
 			$("#roomInfo").html("Connecting...");
-			AppWarp.WarpClient.initialize(apiKey, secreteKey);
-			_warpclient = AppWarp.WarpClient.getInstance();
-			setListeners(_warpclient);
 			_warpclient.connect(nameId);
 		}
     });
