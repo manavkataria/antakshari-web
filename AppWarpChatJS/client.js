@@ -96,6 +96,9 @@ function onChatReceived(chat)
 {	
 	imgsrc = 'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn1/c5.5.65.65/s50x50/282965_468653659847682_8020574_t.jpg';
     $("#chat").html($("#chat").html() + "<dd><img class='profilepic' src='"+imgsrc+"' alt=''><div class='chatTextBlock'><span class='text-danger'>" + chat.getSender() + "</span><span class='text-primary'>" + chat.getChat() + "</span></div></dd>" );
+    $("#chat").animate({
+        scrollTop: $("#chat").scrollHeight
+    }, 300);
 }
 
 //Join and Subscribe a Chat Room
@@ -233,16 +236,23 @@ function onUserLeftRoom (room, username) {
 function onMovieSearchDone (mInfo) {
 	//console.log(mInfo);
 	//_warpclient.sendChat(mInfo.poster);
-	if(mInfo.poster != "na") {
-		_warpclient.sendChat("<dd align=center><img heght=80 width=80 class='profilepic' src='" + mInfo.poster +
-				"' alt=''/><br><div class='chatTextBlock'><span class='text-primary'>" + mInfo.title 
-				+ "</span></div></dd>");
-		sendMove(mInfo.title);
+	
+	if (mInfo.found == "false") {
+		console.log("movie not found");
+		_warpclient.sendChat(mInfo.title);
 	} else {
-		console.log("movie/poster not found");
-		_warpclient.sendChat(mInfo.title[0]);
+		if (mInfo.poster == "NA") {
+			console.log("poster not found");
+			_warpclient.sendChat(mInfo.title);
+			sendMove(mInfo.title);
+		} else {
+			console.log("movie and poster found");
+			_warpclient.sendChat("<dd align=center><img heght=80 width=80 class='profilepic' src='" + mInfo.poster +
+					"' alt=''/><br><div class='chatTextBlock'><span class='text-primary'>" + mInfo.title 
+					+ "</span></div></dd>");
+			sendMove(mInfo.title);
+		}
 	}
-
 }
 
 //initialize AppWarp

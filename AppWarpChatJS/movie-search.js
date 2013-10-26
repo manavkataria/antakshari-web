@@ -115,11 +115,11 @@ var movieSearch = (function() {
 			var resp = null;
 			results = response.total_results;
 			if(results != 0) {
-				poster = response.results[0].poster_path;
+				poster = tmdbPosterURL + response.results[0].poster_path;
 				//console.log(tmdbPosterURL + poster);
-				resp = {"title" : movie, "poster" : tmdbPosterURL + poster};
+				resp = {"title" : movie, "poster" :  poster, "found" : "true"};
 			} else {
-				resp = {"title" : movie, "poster" : "na"};
+				resp = {"title" : movie[0], "poster" : "NA", "found" : "true"};
 			}
 			resCallback(resp);
 		});
@@ -133,6 +133,8 @@ var movieSearch = (function() {
 			correction = response.correction;
 			if(typeof(correction) == 'undefined' && response.hits == 0) {
 				console.log("freebase no results");
+				resp = {"title" : movie, "poster" : "NA", "found" : "false"};
+				resCallback(resp);
 				//omdbSearch(movie);
 			} else if(typeof(correction) != 'undefined') {
 				console.log("correction : " + correction);
@@ -152,7 +154,10 @@ var movieSearch = (function() {
 					tmdbSearch(bestMatch);
 					//getInfo(bestMatch);
 					//omdbSearch(movie);
-				}	
+				} else {
+					resp = {"title" : movie, "poster" : "NA", "found" : "false"};
+					resCallback(resp);
+				}
 			}
 		});
 	}

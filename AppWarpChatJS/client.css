@@ -1,6 +1,12 @@
 #chat dd{
   padding-bottom: 2px;
 }
+
+#chat {
+  overflow: auto;
+  height : 50%;
+}
+
 .chatTextBlock {
   display: inline-block;
   vertical-align: middle;
