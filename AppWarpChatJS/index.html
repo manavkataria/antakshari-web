@@ -14,27 +14,28 @@
     </head>
     <body>
         <div class="container">
-            <div class="row" id="nameRow">
+          <div class="row" id="nameRow">
               <div class="col-md-4 col-md-offset-4 text-center">
                   <h1>Movie Antakshari</h1>
                   <div class="well">
-					<form role="form">
-					  <div class="form-group">
-						<label for="nameText">Login</label>
-						<input type="text" class="form-control" id="nameText" placeholder="Enter Your Name"><br/>
-						<button id="nameBtn" type="button" class="btn btn-primary">Continue</button>
-					  </div>
+          				  <form role="form">
+          					  <div class="form-group">
+            						<label for="nameText">Login</label>
+            						<input type="text" class="form-control" id="nameText" placeholder="Enter Your Name"><br/>
+            						<button id="nameBtn" type="button" class="btn btn-primary">Continue</button>
+          					  </div>
                     </form>
                   </div>
               </div>
-            </div>
+          </div>
             <div class="row" id="roomsRow">
                     <div class="col-md-2 well">
                         <h4>Rooms</h4>
                         <ul class="nav nav-pills nav-stacked" id="roomsList">
                         </ul>
                     </div>
-                    <div class="col-md-10">
+                    
+                    <div class="col-md-8">
                         <div class="alert alert-info" id="roomInfo">
                             No room selected
                         </div>
@@ -59,8 +60,13 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
             </div>
+            <div class="col-md-2 well">
+                <h4>Users</h4>
+                <ul class="nav nav-pills nav-stacked" id="usersList">
+                </ul>
+            </div>                    
+          </div>
         </div>
     </body>
 </html>
