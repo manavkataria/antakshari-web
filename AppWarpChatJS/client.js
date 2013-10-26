@@ -230,11 +230,26 @@ function onUserLeftRoom (room, username) {
     $("#chat").html($("#chat").html() + systemMsg);
 }
 
+function onMovieSearchDone (mInfo) {
+	//console.log(mInfo);
+	//_warpclient.sendChat(mInfo.poster);
+	if(mInfo.poster != "na") {
+		_warpclient.sendChat("<dd align=center><img heght=80 width=80 class='profilepic' src='" + mInfo.poster +
+				"' alt=''/><br><div class='chatTextBlock'><span class='text-primary'>" + mInfo.title 
+				+ "</span></div></dd>");
+		sendMove(mInfo.title);
+	} else {
+		console.log("movie/poster not found");
+		_warpclient.sendChat(mInfo.title[0]);
+	}
+
+}
+
 //initialize AppWarp
 function Init() {
     AppWarp.WarpClient.initialize(apiKey, secreteKey);
     _warpclient = AppWarp.WarpClient.getInstance();
-    setListeners(_warpclient); 
+    setListeners(_warpclient);
 }
 
 
@@ -267,8 +282,9 @@ $(document).ready(function(){
 
             if ( chatMessage != "")
             {
-                _warpclient.sendChat(chatMessage);
-                sendMove(chatMessage);
+            	movieSearch.getMovieInfo(chatMessage);
+                //_warpclient.sendChat(chatMessage);
+                //sendMove(chatMessage);
                 /*
                 if (room.type == turnbased ) {
                     // if (true == isValidMovieName(chatMessage)) 
@@ -280,4 +296,5 @@ $(document).ready(function(){
             }
         }
     });
+	movieSearch.setCallback(onMovieSearchDone);
 });
