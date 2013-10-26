@@ -5,19 +5,29 @@
 		<script src="movie-search.js"></script>
 		<script>		
 		$(document).ready(function(){
-			var mSearch = new MovieSearch();
+			movieSearch.setCallback(onMovieSearchDone);			
 			$("#movieText").keyup(function(event){
 				if(event.keyCode == 13){
-					mSearch.search($("#movieText").val());
+					movieSearch.getMovieInfo($("#movieText").val());
 					$("#movieText").val("");
 				}
 			});	
 
 			$("#submitButton").click(function() {
-				mSearch.search($("#movieText").val());
+				movieSearch.getMovieInfo($("#movieText").val());
 				$("#movieText").val("");
 			});
-		});		
+			
+			function onMovieSearchDone(response) {
+				if(response.error == 'undefined') {
+					console.log("no matches");
+				} else {
+					$("#resultText").val("");
+					console.log("match : " + response.title + " poster : " + response.poster);
+					$("#resultText").html("<h3>" + response.title + "</h3>" + "<img height=200 width=200 src=" + response.poster + "/>");
+				}
+			}
+		});
 		</script>
 	</head>
 	<body>
