@@ -1,5 +1,5 @@
-var apiKey = "4f4dfd297a567c28c8febe7858d7cd8d51827196d81cdd6b98eead4fd6bb97f9";
-var secreteKey = "609aa42d46f3c18137d8721faa9c0266439669861beba6638b9574ea90332d05";
+var apiKey = "4108cfe453414abf3bc1d516576aeaf6122303b9a0a483906f65caf6673a2652";
+var secreteKey = "df76a5fc36cb696f6657cfa7f67c729ca03186ca101195bce1820646d72a8c0f";
 
 var _warpclient;
 var nameId = "";
@@ -67,8 +67,8 @@ function onJoinRoomDone(room)
     else if (result == AppWarp.ResultCode.ResourceNotFound) 
     {
         // Create Dynamic Turn Based Room 
-        _warpclient.createTurnRoom("TurnRoom", "Admin", 2, null, 1000);
-        console.log("Create Turn Room Invoked");
+        // _warpclient.createTurnRoom("TurnRoom", "Admin", 2, null, 1000);
+        // console.log("Create Turn Room Invoked");
     } 
     else 
     {
