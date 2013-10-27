@@ -1,13 +1,26 @@
 <head>
-  <title>MeteorChat</title>
+  <title>Chat</title>
 </head>
 
 <body>
-  {{> hello}}
+  {{> entry}}
+  {{> messages}}
 </body>
 
-<template name="hello">
-  <h1>Hello World!</h1>
-  {{greeting}}
-  <input type="button" value="Click" />
+<template name="entry">
+  <p>
+  	<input type="text" id="username" placeholder="Your Name" />
+  	<input type="text" id="messageBox" placeholder="Your Message" />
+  	<input type="button" value="Submit!" />
+  </p>
+</template>
+
+<template name="messages">
+	{{#each messages}}
+		{{> message}}
+	{{/each}}
+</template>
+
+<template name="message">
+	<p> <strong>{{username}}:</strong> {{message}} </p>
 </template>
