@@ -16,10 +16,9 @@ function onConnectDone(res)
         _warpclient.getAllRooms();
         _warpclient.getOnlineUsers();
         
-        // Create Dynamic Turn Based Room 
-        // experiment(_warpclient);
-
         //This would Quickly Join a room (if exists) with 1 user in it. 
+        console.log("Attempting a Quick Join...");
+        // TODO: Check if its a Dynamic Turn Room.
         _warpclient.joinRoomInRange(1,1,1);
     } else {
         $("#roomInfo").html("Error in Connection");
@@ -28,6 +27,7 @@ function onConnectDone(res)
 
 function onGetAllRoomsDone(rooms)
 {
+    // Populate Room List
     roomsText = "";
     $("#roomsList").html(roomsText);
     for(var i=0; i<rooms.getRoomIds().length; ++i)
@@ -36,16 +36,18 @@ function onGetAllRoomsDone(rooms)
     }
 }
 
-function onGetLiveRoomInfo(room)
+function onGetLiveRoomInfoDone(room)
 {
-    /* Delete Dead Turn Rooms
+    // 1. 
+    /* Delete Dead TurnRooms
     if (room.getRoom().getName() == 'TurnRoom') {
         _warpclient.deleteRoom(room.getRoom().getRoomId());
         return;
     }  */
 
-    //Populate Room List
-    //console.log("onGetLiveRoomInfo: " + room.getRoom().getName());
+    // 2. 
+    // Populate Room List
+    //console.log("onGetLiveRoomInfoDone: " + room.getRoom().getName());
     roomsText += '<li><a href="#" onClick="joinRoom(\''+ room.getRoom().getRoomId() +'\')">' + room.getRoom().getName() + '(' + room.getUsers().length + ')</a></li>';
 
     $("#roomsList").html(roomsText);
@@ -54,11 +56,23 @@ function onGetLiveRoomInfo(room)
 
 function onJoinRoomDone(room)
 {
-    console.log("onJoinRoomDone: " + room.getResult());
-    if(room.getResult() == AppWarp.ResultCode.Success)
+    result = room.getResult();
+    console.log("onJoinRoomDone: " + room.getName() + ' Result: ' + result);
+    
+    if(result == AppWarp.ResultCode.Success) 
     {
         console.log("onJoinRoomDone");
         _warpclient.subscribeRoom(room.getRoomId());
+    } 
+    else if (result == AppWarp.ResultCode.ResourceNotFound) 
+    {
+        // Create Dynamic Turn Based Room 
+        _warpclient.createTurnRoom("TurnRoom", "Admin", 2, null, 1000);
+        console.log("Create Turn Room Invoked");
+    } 
+    else 
+    {
+        console.Error('Uncaught Join Room Error!');
     }
 }
 
@@ -117,22 +131,26 @@ function leaveRoom()
     $("#roomInfo").html("Connected");
 }
 
+function populateUserList (userList) {
+    usersText = "";
+    
+    // TODO Remove following line: 
+    // $("#usersList").html(usersText);
+
+    for(var i=0; i<userList.length; ++i)
+    {
+        usersText += '<li id=\"'+ userList[i] +'\">'+ userList[i] +'</li>';
+    }
+    $("#usersList").html(usersText);
+}
+
 function onGetOnlineUsersDone(userList) {
     console.log('onGetOnlineUsersDone');
     console.log(userList);
 
     if (userList.getResult() == AppWarp.ResultCode.Success)
     {
-        usernames = userList.getUsernames();
-        
-        usersText = "";
-        $("#usersList").html(usersText);
-
-        for(var i=0; i<usernames.length; ++i)
-        {
-            usersText += '<li id=\"'+ usernames[i] +'\">'+ usernames[i] +'</li>';
-        }
-        $("#usersList").html(usersText);
+        populateUserList(userList.getUsernames());        
     }
 }
 
@@ -161,7 +179,7 @@ function onGetMatchedRoomsDone(matchedRoomEvent) {
 function setListeners(_warpclient) {
 	_warpclient.setResponseListener(AppWarp.Events.onConnectDone, onConnectDone);
 	_warpclient.setResponseListener(AppWarp.Events.onGetAllRoomsDone, onGetAllRoomsDone);
-	_warpclient.setResponseListener(AppWarp.Events.onGetLiveRoomInfoDone, onGetLiveRoomInfo);
+	_warpclient.setResponseListener(AppWarp.Events.onGetLiveRoomInfoDone, onGetLiveRoomInfoDone);
 	_warpclient.setResponseListener(AppWarp.Events.onJoinRoomDone, onJoinRoomDone);
 	_warpclient.setResponseListener(AppWarp.Events.onSubscribeRoomDone, onSubscribeRoomDone);
 	_warpclient.setResponseListener(AppWarp.Events.onLeaveRoomDone, onLeaveRoomDone);
@@ -190,11 +208,6 @@ function onCreateRoomDone(room) {
     }
 }
 
-function experiment(wc) {
-    wc.createTurnRoom("TurnRoom", "MK", 2, null, 1000);
-    console.log("Create Turn Room Invoked");
-}
-
 function sendMove(msg) {
     console.log('sendMove: ' + msg);
     _warpclient.sendMove(msg);
@@ -202,6 +215,7 @@ function sendMove(msg) {
 
 function onSendMoveDone(move) {
     console.log('onSendMoveDone: Event#' + move);
+    // return failed. Not count as Move.
 }
 
 function onMoveCompleted(move) {
