@@ -279,8 +279,28 @@ function Init() {
 Init();
 
 $(document).ready(function(){
-    $("#roomsRow").hide();
-    
+	
+	$.urlParam = function(name) {
+	    var results = new RegExp('[\\#?&]' + name + '=([^&#]*)').exec(window.location.href);
+	    if(results == null) {
+	    	return null;
+	    } else {
+	    	return results[1] || 0;
+	    }
+	};
+	access_token = $.urlParam('access_token');
+	console.log(access_token);
+	if( access_token == null) {
+		$("#roomsRow").hide();
+	} else {
+		accessURL = 'https://graph.facebook.com/me?fields=id,name&access_token=' + access_token;
+		$.getJSON(accessURL, function(response) {
+			$("#roomsRow").show();
+			$("#nameRow").hide();
+			$("#roomInfo").html("Connecting...");
+			_warpclient.connect(response.id);
+		});
+	}
     //TODO/FIXME: Trigger on enter key.
     $("#nameBtn").click(function(){
         
@@ -296,6 +316,21 @@ $(document).ready(function(){
 		}
     });
 	
+    $("#fbBtn").click(function(){
+    	window.location.replace("https://www.facebook.com/dialog/oauth/?client_id=456633154458063&redirect_uri=http://immense-forest-6662.herokuapp.com/&state=samplevalue&response_type=token");
+    	console.log("fb login");
+		/*if ($("#nameText").val() != "")
+		{
+			nameId = $("#nameText").val();
+			
+			$("#nameRow").hide();
+			$("#roomsRow").show();
+						
+			$("#roomInfo").html("Connecting...");
+			_warpclient.connect(nameId);
+		}*/
+    });
+    
 	$("#chatBtn").click(function(){
         if (inRoom == true)
         {
