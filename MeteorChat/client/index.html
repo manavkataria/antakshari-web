@@ -14,10 +14,12 @@
       <div class="well">
         <form role="form">
           <div class="form-group">
+            <!--
             <label for="nameText">Login</label>
             <input type="text" class="form-control" id="nameText" placeholder="Enter Your Name"><br/>
             <button id="nameBtn" type="button" class="btn btn-primary">Continue</button> <br/> <br/>
-            {{loginButtons}}
+             -->
+            <button id="fbBtn" type="button" class="btn btn-primary">Facebook Login</button> <br/> <br/>
           </div>
         </form>
       </div>
@@ -43,9 +45,16 @@
 
 <template name="ChatAndInfoListView">
   <div class="col-md-8">
-    <div class="alert alert-info" id="roomInfo">
-          No room selected
-    </div>
+  	<div class="row" id="statusBar">
+  		<div class="col-md-10">
+  			 <div class="alert alert-info" id="roomInfo">
+          		No room selected
+    		</div>
+  		</div>
+  		<div class="col-md-2" id="logoutBtn">
+  			<button id="lgtBtn" type="button" class="btn btn-primary">Logout</button>
+  		</div>  		
+  	</div>
     <div class="row">
       <div class="col-md-12">
         <div class="panel panel-default">
@@ -80,8 +89,9 @@
 
 <template name="AppWarpChat">
   <div class="container">
-    {{> LoginView}}
-    {{> RoomView}}
+  			{{> LoginView}}
+			{{> RoomView}}
   </div> 
 </template>
+
 

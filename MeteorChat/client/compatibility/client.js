@@ -25,6 +25,15 @@ function onConnectDone(res)
     }
 }
 
+function onDisconnectDone(res) {
+    if(res == AppWarp.ResultCode.Success)
+    {
+    	console.log(res);
+        console.log("Disconnected from appwarp");
+    } else {
+        $("#roomInfo").html("Error in Closing appwarp Connection");
+    }
+}
 function onGetAllRoomsDone(rooms)
 {
     // Populate Room List
@@ -108,9 +117,16 @@ function onUnsubscribeRoomDone(room)
 
 function onChatReceived(chat)
 {	
-	imgsrc = 'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-prn1/c5.5.65.65/s50x50/282965_468653659847682_8020574_t.jpg';
+	imgsrc = 'http://graph.facebook.com/' + Meteor.user().services.facebook.id + '/picture?width=32';
     $("#chat").html($("#chat").html() + "<dd><img class='profilepic' src='"+imgsrc+"' alt=''><div class='chatTextBlock'><span class='text-danger'>" + chat.getSender() + "</span><span class='text-primary'>" + chat.getChat() + "</span></div></dd>" );
-    $('#chat-window').scrollTop($('#chat-window')[0].scrollHeight);
+    //$('#chat-window').scrollTop($('#chat-window').scrollHeight);
+    $('#chat-window').animate({scrollTop: $('#chat-window').scrollHeight}, 'slow');
+    //var div = $('#chat-window');
+    //setInterval(function(){
+    //    var pos = div.scrollTop();
+    //    div.scrollTop(pos + 2);
+    //}, 0)
+    
 }
 
 //Join and Subscribe a Chat Room
@@ -178,6 +194,7 @@ function onGetMatchedRoomsDone(matchedRoomEvent) {
 
 function setListeners(_warpclient) {
 	_warpclient.setResponseListener(AppWarp.Events.onConnectDone, onConnectDone);
+	_warpclient.setResponseListener(AppWarp.Events.onDisconnectDone, onDisconnectDone);
 	_warpclient.setResponseListener(AppWarp.Events.onGetAllRoomsDone, onGetAllRoomsDone);
 	_warpclient.setResponseListener(AppWarp.Events.onGetLiveRoomInfoDone, onGetLiveRoomInfoDone);
 	_warpclient.setResponseListener(AppWarp.Events.onJoinRoomDone, onJoinRoomDone);
@@ -282,7 +299,7 @@ $(document).ready(function(){
     $("#roomsRow").hide();
     
     //TODO/FIXME: Trigger on enter key.
-    $("#nameBtn").click(function(){
+    /*$("#nameBtn").click(function(){
         
 		if ($("#nameText").val() != "")
 		{
@@ -294,7 +311,7 @@ $(document).ready(function(){
 			$("#roomInfo").html("Connecting...");
 			_warpclient.connect(nameId);
 		}
-    });
+    });*/
 	
 	$("#chatBtn").click(function(){
         if (inRoom == true)
@@ -320,3 +337,4 @@ $(document).ready(function(){
     });
 	movieSearch.setCallback(onMovieSearchDone);
 });
+
