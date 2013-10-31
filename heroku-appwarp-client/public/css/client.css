@@ -1,0 +1,26 @@
+#chat dd{
+  padding-bottom: 2px;
+}
+.panel-body {
+	height: 300px;
+	overflow-y: auto;
+	padding-right:1px
+}
+.chatTextBlock {
+  display: inline-block;
+  vertical-align: middle;
+}
+.text-danger {
+  display: block;
+  font-weight: bold;             
+}
+.text-primary {
+  display: block;
+}
+.profilepic {
+  margin-right: 8px;
+}
+
+.NextTurn {
+  font-weight: bold;
+}

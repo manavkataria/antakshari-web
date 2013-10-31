@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Movie Antakshari</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/lib/bootstrap.min.css">
+        <link rel="stylesheet" href="/css/client.css">
+        <script src="/lib/jquery-1.10.2.min.js"></script>
+        <script src="/lib/bootstrap.min.js"></script>
+        <script src="/lib/appwarp.js"></script>
+        <script src="/lib/hmac-sha1.js"></script>
+        <!-- script src="appwarp.min.js"></script -->
+        <script src="/js/client.js"></script>
+        <script src="/js/movie-search.js"></script>
+    </head>
+    <body>
+        <div class="container">
+          <div class="row" id="nameRow">
+              <div class="col-md-4 col-md-offset-4 text-center">
+                  <h1>Movie Antakshari</h1>
+                  <div class="well">
+          				  <form role="form">
+          					  <div class="form-group">
+            						<label for="nameText">Login</label>
+            						<input type="text" class="form-control" id="nameText" placeholder="Enter Your Name"><br/>
+            						<button id="nameBtn" type="button" class="btn btn-primary">Continue</button>
+            						<button id="fbBtn" type="button" class="btn btn-primary">FB Login</button>
+          					  </div>
+                    </form>
+                  </div>
+              </div>
+          </div>
+            <div class="row" id="roomsRow">
+                    <div class="col-md-2 well">
+                        <h4>Rooms</h4>
+                        <ul class="nav nav-pills nav-stacked" id="roomsList">
+                        </ul>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="alert alert-info" id="roomInfo">
+                            No room selected
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="panel panel-default">
+                                  <div class="panel-body" id="chat-window">
+                                      <dl class="nav nav-pills nav-stacked" id="chat">
+                                          Please wait
+                                      </dl>
+                                  </div>
+                                  <div class="panel-heading">
+                                      <div class="row">
+                                          <div class="col-md-10">
+                                            <input type="text" class="form-control" id="chatText" placeholder="type here...">
+                                          </div>
+                                          <div class="col-md-2">
+                                            <button id="chatBtn" type="button" class="btn btn-primary">Send</button>
+                                          </div>
+                                      </div>
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+            </div>
+            <div class="col-md-2 well">
+                <h4>Users</h4>
+                <ul class="nav nav-pills nav-stacked" id="usersList">
+                </ul>
+            </div>                    
+          </div>
+        </div>
+    </body>
+</html>
