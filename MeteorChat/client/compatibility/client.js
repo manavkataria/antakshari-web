@@ -11,8 +11,7 @@ function onConnectDone(res)
 {
     if(res == AppWarp.ResultCode.Success)
     {
-        $("#roomInfo").html("Connected");
-        $("#chat").html("Fetching Rooms & Users...");
+        $("#roomInfo").html("Select Room");
         _warpclient.getAllRooms();
         _warpclient.getOnlineUsers();
         
@@ -56,11 +55,14 @@ function onGetLiveRoomInfoDone(room)
 
     // 2. 
     // Populate Room List
-    //console.log("onGetLiveRoomInfoDone: " + room.getRoom().getName());
-    roomsText += '<li><a href="#" onClick="joinRoom(\''+ room.getRoom().getRoomId() +'\')">' + room.getRoom().getName() + '(' + room.getUsers().length + ')</a></li>';
+    console.log("onGetLiveRoomInfoDone: " + room.getRoom().getName());
+    var roomNumber = room.getRoom().getRoomId();
 
-    $("#roomsList").html(roomsText);
-    $("#chat").html("Select a room");
+    // BUG: TODO: FIXME: Get all rooms but don't change their applied class.
+    if ($("#roomsList #"+roomNumber).length == 0) {
+        console.log($("#roomsList #"+roomNumber).html());
+        $("#roomsList").append('<li id='+roomNumber+'><a href="#" onClick="joinRoom(\''+ roomNumber +'\')">' + room.getRoom().getName() + '(' + room.getUsers().length + ')</a></li>');
+    }
 }
 
 function onJoinRoomDone(room)
@@ -91,14 +93,19 @@ function onSubscribeRoomDone(room)
     {
         inRoom = true;
         roomId = room.getRoomId();
-        $("#roomInfo").html("Joined Room: " + room.getName());
+        console.log("onSubscribeRoomDone: Add Class");
+        $("#roomsList #"+roomId).addClass("active");
+        $("#roomInfo").html("Joined: " + room.getName());
         $("#chat").html("Welcome to Room: " + room.getName() + '<br>');
-        $("#roomsList").append('<button id="leaveBtn" onClick="leaveRoom()" type="button" class="btn btn-primary">Leave Room</button>');
+        //$("#roomsList").append('<button id="leaveBtn" onClick="leaveRoom()" type="button" class="btn btn-primary">Leave Room</button>');
     }
 }
 
 function onLeaveRoomDone(room)
 {
+ 
+    console.log("onLeaveRoomDone: Remove Class");
+    $("#roomsList #"+roomId).removeClass("active");
     if(room.getResult() == AppWarp.ResultCode.Success)
     {
         _warpclient.unsubscribeRoom(room.getRoomId());
@@ -133,18 +140,21 @@ function onChatReceived(chat)
 function joinRoom(id)
 {
     console.log('Request joinRoom: ' + id);
-    if (inRoom == false)
+    // TODO: Remove Globals
+    if (inRoom == true)
     {
-        _warpclient.joinRoom(id);
-    } else {
-        console.warn('Already in another room: ' + roomId);
+        console.log('Leaving room: ' + roomId);
+        // Should this be a synchronous call?
+        // TODO: Remove Globals
+        leaveRoom();
     }
+    _warpclient.joinRoom(id);
 }
 
 function leaveRoom()
 {
     _warpclient.leaveRoom(roomId);
-    $("#roomInfo").html("Connected");
+    $("#roomInfo").html("In Lobby...");
 }
 
 function populateUserList (userList) {
