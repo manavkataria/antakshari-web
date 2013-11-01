@@ -1,6 +1,6 @@
 <head>
     <title>Movie Antakshari</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
 </head>
 
 <body>
@@ -8,71 +8,61 @@
 </body>
 
 <template name="LoginView">
-  <div class="row" id="nameRow">
+  <div class="row-fluid" id="nameRow">
     <div class="col-md-4 col-md-offset-4 text-center">
       <h1>Movie Antakshari</h1>
-      <div class="well">
-        <form role="form">
-          <div class="form-group">
-            <!--
-            <label for="nameText">Login</label>
-            <input type="text" class="form-control" id="nameText" placeholder="Enter Your Name"><br/>
-            <button id="nameBtn" type="button" class="btn btn-primary">Continue</button> <br/> <br/>
-             -->
-            <button id="fbBtn" type="button" class="btn btn-primary">Facebook Login</button> <br/> <br/>
-          </div>
-        </form>
-      </div>
+      <br>
+      <form role="form">
+        <div class="form-group">
+          <!--
+          <label for="nameText">Login</label>
+          <input type="text" class="form-control" id="nameText" placeholder="Enter Your Name"><br/>
+          <button id="nameBtn" type="button" class="btn btn-primary">Continue</button> <br/> <br/>
+           -->
+          <button id="fbBtn" type="button" class="btn btn-primary">Facebook Login</button> <br/> <br/>
+        </div>
+      </form>
     </div>
   </div>
 </template>
 
 <template name="RoomListView">
-  <div class="col-md-2 well">
-    <h4>Rooms</h4>
-    <ul class="nav nav-pills nav-stacked" id="roomsList">
-    </ul>
-  </div>  
+  <h4>Rooms</h4>
+  <ul class="nav nav-pills nav-stacked" id="roomsList">
+  </ul>
 </template>
 
 <template name="UserListView">
-  <div class="col-md-2 well">
-    <h4>Users</h4>
-    <ul class="nav nav-pills nav-stacked" id="usersList">
-    </ul>
-  </div>  
+  <h4>Users</h4>
+  <ul class="nav nav-pills nav-stacked" id="usersList">
+  </ul>
+</template>
+
+<template name="StatusBarAndLoginLogoutView">
+  <div id="statusBar">
+      <div class="alert alert-info" id="roomInfo">
+        No room selected
+      </div>
+    <div id="logoutBtn">
+      <button id="lgtBtn" type="button" class="btn btn-primary">Logout</button>
+    </div>
+  </div>
 </template>
 
 <template name="ChatAndInfoListView">
-  <div class="col-md-8">
-  	<div class="row" id="statusBar">
-  		<div class="col-md-10">
-  			 <div class="alert alert-info" id="roomInfo">
-          		No room selected
-    		</div>
-  		</div>
-  		<div class="col-md-2" id="logoutBtn">
-  			<button id="lgtBtn" type="button" class="btn btn-primary">Logout</button>
-  		</div>  		
-  	</div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="panel panel-default">
-          <div class="panel-body" id="chat-window">
-            <dl class="nav nav-pills nav-stacked" id="chat">
-                  Please wait
-            </dl>
-          </div>
-          <div class="panel-heading">
-            <div class="row">
-              <div class="col-md-10">
-                <input type="text" class="form-control" id="chatText" placeholder="type here...">
-              </div>
-              <div class="col-md-2">
-                <button id="chatBtn" type="button" class="btn btn-primary">Send</button>
-              </div>
-            </div>
-          </div>
+  <div class="panel panel-default">
+    <div class="panel-body" id="chat-window">
+      <dl class="nav nav-pills nav-stacked" id="chat">
+        Please wait
+      </dl>
+    </div>
+    <div class="panel-heading">
+      <div class="row">
+        <div class="col-md-10">
+          <input type="text" class="form-control" id="chatText" placeholder="type here...">
+        </div>
+        <div class="col-md-2">
+          <button id="chatBtn" type="button" class="btn btn-primary">Send</button>
         </div>
       </div>
     </div>
@@ -80,16 +70,21 @@
 </template>
 
 <template name="RoomView">
-  <div class="row" id="roomsRow">
-    {{> RoomListView}}
-    {{> ChatAndInfoListView}}
-    {{> UserListView}}
+  <div class="row-fluid" id="roomsRow">
+    <div class="col-md-3 well">
+      {{> UserListView}}
+      {{> RoomListView}}
+      {{> StatusBarAndLoginLogoutView}}
+    </div>
+    <div class="col-md-9 well">
+      {{> ChatAndInfoListView}}
+    </div>
   </div>
 </template>
 
 <template name="AppWarpChat">
-  <div class="container">
-  			{{> LoginView}}
+  <div class="container-fluid narrow">
+  		{{> LoginView}}
 			{{> RoomView}}
   </div> 
 </template>
