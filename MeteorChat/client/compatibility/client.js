@@ -76,8 +76,8 @@ function onJoinRoomDone(room)
     else if (result == AppWarp.ResultCode.ResourceNotFound) 
     {
         // Create Dynamic Turn Based Room 
-        // _warpclient.createTurnRoom("TurnRoom", "Admin", 2, null, 1000);
-        // console.log("Create Turn Room Invoked");
+        _warpclient.createTurnRoom("TurnRoom", "Admin", 2, null, 1000);
+        console.log("Create Turn Room Invoked");
     } 
     else 
     {
@@ -93,7 +93,7 @@ function onSubscribeRoomDone(room)
         roomId = room.getRoomId();
         $("#roomInfo").html("Joined Room: " + room.getName());
         $("#chat").html("Welcome to Room: " + room.getName() + '<br>');
-        $("#roomsList").html('<button id="leaveBtn" onClick="leaveRoom()" type="button" class="btn btn-primary">Leave Room</button>');
+        $("#roomsList").append('<button id="leaveBtn" onClick="leaveRoom()" type="button" class="btn btn-primary">Leave Room</button>');
     }
 }
 
