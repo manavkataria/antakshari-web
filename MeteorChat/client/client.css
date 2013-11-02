@@ -11,6 +11,7 @@ body {
   width: 100%;
   padding: 0;
   margin: 0;
+  background-image: url('http://2.bp.blogspot.com/-76zDFwn344c/TVcD97_BkcI/AAAAAAAAAHE/le86DMOjTUw/s1600/Stage-Background.png');
 }
 
 .narrow {
@@ -63,3 +64,24 @@ body {
 .NextTurn {
   font-weight: bold;
 }
+
+h4, h1 {
+  color: white;
+}
+
+.text-white {
+  color: white;
+}
+
+.alpha75 {
+  /* Source: http://robertnyman.com/2010/01/11/css-background-transparency-without-affecting-child-elements-through-rgba-and-filters/ */
+  /* Fallback for web browsers that doesn't support RGBa */
+  background: rgb(0, 0, 0);
+  /* RGBa with 0.6 opacity */
+  background: rgba(0, 0, 0, 0.75);
+  /* For IE 5.5 - 7*/
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000);
+  /* For IE 8*/
+  -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000, endColorstr=#99000000)";
+}
+

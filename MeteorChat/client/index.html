@@ -71,19 +71,19 @@
 
 <template name="RoomView">
   <div class="row-fluid" id="roomsRow">
-    <div class="col-md-3 well">
+    <div class="col-md-3">
       {{> UserListView}}
       {{> RoomListView}}
       {{> StatusBarAndLoginLogoutView}}
     </div>
-    <div class="col-md-9 well">
+    <div class="col-md-9">
       {{> ChatAndInfoListView}}
     </div>
   </div>
 </template>
 
 <template name="AppWarpChat">
-  <div class="container-fluid narrow">
+  <div class="container-fluid narrow alpha75">
   		{{> LoginView}}
 			{{> RoomView}}
   </div> 
