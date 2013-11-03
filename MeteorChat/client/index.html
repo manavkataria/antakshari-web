@@ -36,7 +36,7 @@
   </ul>
 </template>
 
-<template name="UserListView">
+<template name="UserView">
   <dd>
     <img class="profilepic" src="http://graph.facebook.com/100001091555213/picture?width=32" alt="">
     <div class="chatTextBlock nav">
@@ -103,7 +103,7 @@
 <template name="RoomView">
   <div class="row-fluid" id="roomsRow">
     <div class="col-xs-4">
-      {{> UserListView}}
+      {{> UserView}}
       {{> RoomListView}}
       {{> LoginLogoutView}}
     </div>
