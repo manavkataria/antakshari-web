@@ -7,29 +7,15 @@ var roomsText = "";
 var inRoom = false;
 var roomId = "";
 
-function status(level, msg) {
-
-    $("#roomInfo").removeClass("alert-success alert-info alert-warning alert-danger")
-
-    switch (level) {
-        case 'success':
-            $("#roomInfo").addClass("alert-success");
-            break;
-        case 'info':
-            $("#roomInfo").addClass("alert-info");
-            break;
-        case 'warn':
-            $("#roomInfo").addClass("alert-warning");
-            break;
-        case 'danger': 
-            $("#roomInfo").addClass("alert-danger");
-            break;
-        default: 
-            $("#roomInfo").addClass("alert-info");
-            break;
-    }
-
-    $("#statusMsg").text(msg);
+function status(type, msg) {
+    var alertHTML = "<div class='alert alert-message alert-" + type + " fade' data-alert><p> " + msg + " </p></div>";
+    
+    $("#roomInfo").html(alertHTML);
+    $(".alert-message").addClass("in");
+    
+    setTimeout(function () {
+      $(".alert-message").removeClass("in");
+    }, 3000);
 }
 
 function onConnectDone(res)
@@ -38,7 +24,6 @@ function onConnectDone(res)
     {
         status("info", "Select Room");
         _warpclient.getAllRooms();
-        _warpclient.getOnlineUsers();
         
         //This would Quickly Join a room (if exists) with 1 user in it. 
         console.log("Attempting a Quick Join...");
@@ -103,7 +88,7 @@ function onJoinRoomDone(room)
     else if (result == AppWarp.ResultCode.ResourceNotFound) 
     {
         // Create Dynamic Turn Based Room 
-        _warpclient.createTurnRoom("TurnRoom", "Admin", 2, null, 1000);
+        _warpclient.createTurnRoom("Antakshari with Vijay", "Admin", 2, null, 1000);
         console.log("Create Turn Room Invoked");
     } 
     else 
@@ -119,16 +104,15 @@ function onSubscribeRoomDone(room)
         inRoom = true;
         roomId = room.getRoomId();
         console.log("onSubscribeRoomDone: Add Class");
+
         $("#roomsList #"+roomId).addClass("active");
-        status("info", "Joined: " + room.getName());
         $("#chat").html("Welcome to Room: " + room.getName() + '<br>');
-        //$("#roomsList").append('<button id="leaveBtn" onClick="leaveRoom()" type="button" class="btn btn-primary">Leave Room</button>');
+        status("info", "Joined: " + room.getName());
     }
 }
 
 function onLeaveRoomDone(room)
 {
- 
     console.log("onLeaveRoomDone: Remove Class");
     $("#roomsList #"+roomId).removeClass("active");
     if(room.getResult() == AppWarp.ResultCode.Success)
@@ -179,30 +163,6 @@ function joinRoom(id)
 function leaveRoom()
 {
     _warpclient.leaveRoom(roomId);
-    status("info", "In Lobby...");
-}
-
-function populateUserList (userList) {
-    usersText = "";
-    
-    // TODO Remove following line: 
-    // $("#usersList").html(usersText);
-
-    for(var i=0; i<userList.length; ++i)
-    {
-        usersText += '<li id=\"'+ userList[i] +'\">'+ userList[i] +'</li>';
-    }
-    $("#usersList").html(usersText);
-}
-
-function onGetOnlineUsersDone(userList) {
-    console.log('onGetOnlineUsersDone');
-    console.log(userList);
-
-    if (userList.getResult() == AppWarp.ResultCode.Success)
-    {
-        populateUserList(userList.getUsernames());        
-    }
 }
 
 function onDeleteRoomDone(room) {
@@ -238,7 +198,6 @@ function setListeners(_warpclient) {
 	_warpclient.setResponseListener(AppWarp.Events.onUnsubscribeRoomDone, onUnsubscribeRoomDone);
 	_warpclient.setResponseListener(AppWarp.Events.onCreateRoomDone, onCreateRoomDone);
     _warpclient.setResponseListener(AppWarp.Events.onSendMoveDone, onSendMoveDone);
-    _warpclient.setResponseListener(AppWarp.Events.onGetOnlineUsersDone, onGetOnlineUsersDone);
     _warpclient.setResponseListener(AppWarp.Events.onDeleteRoomDone, onDeleteRoomDone);
     _warpclient.setResponseListener(AppWarp.Events.onGetMatchedRoomsDone, onGetMatchedRoomsDone);
     
@@ -279,8 +238,7 @@ function onMoveCompleted(move) {
     chatHtml += move.getSender() +  ' Played a Move: \"' + move.getMoveData() + '\"';
     //chatHtml += '<br> Next Turn: ' + ;
 
-    $("#usersList #" + move.getSender()).removeClass('NextTurn');
-    $("#usersList #" + move.getNextTurn()).addClass('NextTurn');
+    //TODO: Next Turn Notification UI
 
     $("#chat").html(chatHtml);
 }

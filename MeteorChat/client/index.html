@@ -27,28 +27,27 @@
 </template>
 
 <template name="RoomListView">
-  <h4>Your Turn</h4>
+  <h4>Your Move</h4>
   <ul class="nav nav-pills nav-stacked" id="roomsList">
   </ul>
-  <h4>Their Turn</h4>
+  <h4>Their Move</h4>
   <ul class="nav nav-pills nav-stacked" id="theirTurnRoomsList">
-    <li> <a href='#'> DummyRoom </a> </li>
+    <li> <a href='#'> Antakshari with Niki(0) </a> </li>
   </ul>
 </template>
 
 <template name="UserListView">
-  <h4>Users</h4>
-  <ul class="nav nav-pills nav-stacked" id="usersList">
-  </ul>
+  <dd>
+    <img class="profilepic" src="http://graph.facebook.com/100001091555213/picture?width=32" alt="">
+    <div class="chatTextBlock">
+      <span class="text-danger">Manav K</span>
+      <span class="text-primary">3,234 points</span>
+    </div>
+  </dd>
 </template>
 
 <template name="StatusBarView">
-  <div id="statusBar">
-    <div class="alert alert-info" id="roomInfo">
-        <div id="statusMsg">
-          No room selected
-        </div>
-    </div>
+  <div id="roomInfo">
   </div>
 </template>
 
@@ -89,12 +88,12 @@
 
 <template name="RoomView">
   <div class="row-fluid" id="roomsRow">
-    <div class="col-xs-3">
+    <div class="col-xs-4">
       {{> UserListView}}
       {{> RoomListView}}
       {{> LoginLogoutView}}
     </div>
-    <div class="col-xs-9">
+    <div class="col-xs-8">
       {{> ChatAndInfoListView}}
     </div>
   </div>
