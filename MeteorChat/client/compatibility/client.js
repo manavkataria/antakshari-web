@@ -332,7 +332,7 @@ Init();
 
 $(document).ready(function(){
     $("#roomsRow").hide();
-    
+    //Init();
     //TODO/FIXME: Trigger on enter key.
     /*$("#nameBtn").click(function(){
         

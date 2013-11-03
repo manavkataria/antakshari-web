@@ -8,6 +8,7 @@ Template.LoginView.events({
 			} else {
 				//show an alert
 				//alert('logged in');
+				//Init();
 				console.log(Meteor.user());
 				$("#nameRow").hide();
 				$("#roomsRow").show();
@@ -34,7 +35,7 @@ Template.LoginView.events({
 	}
 });
 
-Template.ChatAndInfoListView.events({
+Template.LoginLogoutView.events({
 	"click #lgtBtn": function(e, tmpl){
 		Meteor.logout(function(err) {
 			if(err) {
