@@ -9,7 +9,7 @@
 
 <template name="LoginView">
   <div class="row-fluid" id="nameRow">
-    <div class="col-md-4 col-md-offset-4 text-center">
+    <div class="col-xs-4 col-sm-4 col-sm-offset-4 text-center">
       <h1>Movie Antakshari</h1>
       <br>
       <form role="form">
@@ -27,8 +27,12 @@
 </template>
 
 <template name="RoomListView">
-  <h4>Rooms</h4>
+  <h4>Your Turn</h4>
   <ul class="nav nav-pills nav-stacked" id="roomsList">
+  </ul>
+  <h4>Their Turn</h4>
+  <ul class="nav nav-pills nav-stacked" id="theirTurnRoomsList">
+    <li> <a href='#'> DummyRoom </a> </li>
   </ul>
 </template>
 
@@ -38,45 +42,59 @@
   </ul>
 </template>
 
-<template name="StatusBarAndLoginLogoutView">
+<template name="StatusBarView">
   <div id="statusBar">
-      <div class="alert alert-info" id="roomInfo">
-        No room selected
+    <div class="alert alert-info" id="roomInfo">
+        <div id="statusMsg">
+          No room selected
+        </div>
+    </div>
+  </div>
+</template>
+
+<template name="LoginLogoutView">
+  <div id="logoutBtn">
+    <button id="lgtBtn" type="button" class="btn btn-primary">Logout</button>
+  </div>
+</template>
+
+<template name="PanelBodyView">
+  <div class="panel-body" id="chat-window">
+    <dl class="nav nav-pills nav-stacked" id="chat">
+      Connected.
+    </dl>
+  </div>
+</template>
+
+<template name="PanelHeadingView">
+  <div class="panel-heading">
+    <div class="row">
+      <div class="col-xs-10">
+        <input type="text" class="form-control" id="chatText" placeholder="type here...">
       </div>
-    <div id="logoutBtn">
-      <button id="lgtBtn" type="button" class="btn btn-primary">Logout</button>
+      <div class="col-xs-2">
+        <button id="chatBtn" type="button" class="btn btn-primary">Send</button>
+      </div>
     </div>
   </div>
 </template>
 
 <template name="ChatAndInfoListView">
   <div class="panel panel-default">
-    <div class="panel-body" id="chat-window">
-      <dl class="nav nav-pills nav-stacked" id="chat">
-        Connected.
-      </dl>
-    </div>
-    <div class="panel-heading">
-      <div class="row">
-        <div class="col-md-10">
-          <input type="text" class="form-control" id="chatText" placeholder="type here...">
-        </div>
-        <div class="col-md-2">
-          <button id="chatBtn" type="button" class="btn btn-primary">Send</button>
-        </div>
-      </div>
-    </div>
+    {{> PanelBodyView}}
+    {{> StatusBarView}}
+    {{> PanelHeadingView}}
   </div>
 </template>
 
 <template name="RoomView">
   <div class="row-fluid" id="roomsRow">
-    <div class="col-md-3">
+    <div class="col-xs-3">
       {{> UserListView}}
       {{> RoomListView}}
-      {{> StatusBarAndLoginLogoutView}}
+      {{> LoginLogoutView}}
     </div>
-    <div class="col-md-9">
+    <div class="col-xs-9">
       {{> ChatAndInfoListView}}
     </div>
   </div>

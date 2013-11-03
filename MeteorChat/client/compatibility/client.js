@@ -7,11 +7,36 @@ var roomsText = "";
 var inRoom = false;
 var roomId = "";
 
+function status(level, msg) {
+
+    $("#roomInfo").removeClass("alert-success alert-info alert-warning alert-danger")
+
+    switch (level) {
+        case 'success':
+            $("#roomInfo").addClass("alert-success");
+            break;
+        case 'info':
+            $("#roomInfo").addClass("alert-info");
+            break;
+        case 'warn':
+            $("#roomInfo").addClass("alert-warning");
+            break;
+        case 'danger': 
+            $("#roomInfo").addClass("alert-danger");
+            break;
+        default: 
+            $("#roomInfo").addClass("alert-info");
+            break;
+    }
+
+    $("#statusMsg").text(msg);
+}
+
 function onConnectDone(res)
 {
     if(res == AppWarp.ResultCode.Success)
     {
-        $("#roomInfo").html("Select Room");
+        status("info", "Select Room");
         _warpclient.getAllRooms();
         _warpclient.getOnlineUsers();
         
@@ -20,7 +45,7 @@ function onConnectDone(res)
         // TODO: Check if its a Dynamic Turn Room.
         _warpclient.joinRoomInRange(1,1,1);
     } else {
-        $("#roomInfo").html("Error in Connection");
+        status("danger", "Error in Connection");
     }
 }
 
@@ -30,7 +55,7 @@ function onDisconnectDone(res) {
     	console.log(res);
         console.log("Disconnected from appwarp");
     } else {
-        $("#roomInfo").html("Error in Closing appwarp Connection");
+        status("danger", "Error in Closing appwarp Connection");
     }
 }
 function onGetAllRoomsDone(rooms)
@@ -95,7 +120,7 @@ function onSubscribeRoomDone(room)
         roomId = room.getRoomId();
         console.log("onSubscribeRoomDone: Add Class");
         $("#roomsList #"+roomId).addClass("active");
-        $("#roomInfo").html("Joined: " + room.getName());
+        status("info", "Joined: " + room.getName());
         $("#chat").html("Welcome to Room: " + room.getName() + '<br>');
         //$("#roomsList").append('<button id="leaveBtn" onClick="leaveRoom()" type="button" class="btn btn-primary">Leave Room</button>');
     }
@@ -154,7 +179,7 @@ function joinRoom(id)
 function leaveRoom()
 {
     _warpclient.leaveRoom(roomId);
-    $("#roomInfo").html("In Lobby...");
+    status("info", "In Lobby...");
 }
 
 function populateUserList (userList) {
@@ -318,7 +343,6 @@ $(document).ready(function(){
 			$("#nameRow").hide();
 			$("#roomsRow").show();
 						
-			$("#roomInfo").html("Connecting...");
 			_warpclient.connect(nameId);
 		}
     });*/

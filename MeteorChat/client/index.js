@@ -12,12 +12,11 @@ Template.LoginView.events({
 				$("#nameRow").hide();
 				$("#roomsRow").show();
 							
-				$("#roomInfo").html("Connecting...");
+				status("info", "Connecting...");
 				_warpclient.connect(Meteor.user().services.facebook.username);
 			}
 		});
 	}
-	
 });
 
 Template.LoginView.events({
@@ -29,7 +28,7 @@ Template.LoginView.events({
 			$("#nameRow").hide();
 			$("#roomsRow").show();
 						
-			$("#roomInfo").html("Connecting...");
+			status("info", "Connecting...");
 			_warpclient.connect(nameId);
 		}
 	}
