@@ -69,6 +69,13 @@ h4, h1 {
   color: white;
 }
 
+.alert {
+    position: absolute;
+    bottom: 70px; 
+    left: 31px; 
+    right: 28px;
+}
+
 .text-white {
   color: white;
 }

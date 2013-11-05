@@ -8,14 +8,14 @@ var inRoom = false;
 var roomId = "";
 
 function status(type, msg) {
-    var alertHTML = "<div class='alert alert-message alert-" + type + " fade' data-alert><p> " + msg + " </p></div>";
+    var alertHTML = "<div class='alert alert-" + type + " fade'><p> " + msg + " </p></div>";
     
     $("#roomInfo").html(alertHTML);
-    $(".alert-message").addClass("in");
+    $(".alert").addClass("in");
     
     setTimeout(function () {
-      $(".alert-message").removeClass("in");
-    }, 3000);
+      $(".alert").removeClass("in");
+    }, 3000);  
 }
 
 function onConnectDone(res)
