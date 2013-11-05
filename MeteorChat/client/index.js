@@ -52,3 +52,13 @@ Template.LoginLogoutView.events({
 	}
 	
 });
+
+Template.UserView.profilePic = function() {
+	if(Meteor.user()!= null)
+	  return 'http://graph.facebook.com/' + Meteor.user().services.facebook.id + '/picture?width=32';
+};
+
+Template.UserView.userName = function() {
+	if(Meteor.user()!= null)
+	  return Meteor.user().services.facebook.name;
+};

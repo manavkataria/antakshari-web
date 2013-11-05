@@ -49,12 +49,12 @@
 
 <template name="UserView">
   <dd>
-    <img class="profilepic" src="http://graph.facebook.com/100001091555213/picture?width=32" alt="">
+    <img class="profilepic" src={{profilePic}} alt="">
     <div class="chatTextBlock nav">
       <span>
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-            Manav Kataria <b class="caret"></b>
+            {{userName}} <b class="caret"></b>
           </a>
           {{> DropdownListView}}
         </li>
