@@ -133,7 +133,7 @@ function onUnsubscribeRoomDone(room)
 
 function onChatReceived(chat)
 {	
-	imgsrc = 'http://graph.facebook.com/' + Meteor.user().services.facebook.id + '/picture?width=32';
+	imgsrc = 'http://graph.facebook.com/' + chat.getSender() + '/picture?width=32';
     $("#chat").html($("#chat").html() + "<dd><img class='profilepic' src='"+imgsrc+"' alt=''><div class='chatTextBlock'><span class='text-danger'>" + chat.getSender() + "</span><span class='text-primary'>" + chat.getChat() + "</span></div></dd>" );
     //$('#chat-window').scrollTop($('#chat-window').scrollHeight);
     $('#chat-window').animate({scrollTop: $('#chat-window').scrollHeight}, 'slow');
