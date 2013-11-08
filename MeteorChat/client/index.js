@@ -53,12 +53,44 @@ Template.LoginLogoutView.events({
 	
 });
 
+Template.UserView.userName = function() {
+	if(Meteor.user()!= null)
+	  return Meteor.user().services.facebook.name;
+};
+
 Template.UserView.profilePic = function() {
 	if(Meteor.user()!= null)
 	  return 'http://graph.facebook.com/' + Meteor.user().services.facebook.id + '/picture?width=32';
 };
 
-Template.UserView.userName = function() {
+Template.UserView.totalPoints = function() {
+	return '1,234';
+};
+
+
+Template.UserStatView.userName = function() {
 	if(Meteor.user()!= null)
 	  return Meteor.user().services.facebook.name;
 };
+
+Template.UserStatView.profilePic = function() {
+	if(Meteor.user()!= null)
+	  return 'http://graph.facebook.com/' + Meteor.user().services.facebook.id + '/picture?width=32';
+};
+
+Template.UserStatView.points = function() {
+	return '300';
+};
+
+Template.OpponentStatView.userName = function() {
+	return 'Gabbar Singh';
+};
+
+Template.OpponentStatView.profilePic = function() {
+	return 'http://www.gonemovies.com/WWW/XsFilms/SnelPlaatjes/BolSholayGabbar.jpg';
+};
+
+Template.OpponentStatView.points = function() {
+	return '500';
+};
+

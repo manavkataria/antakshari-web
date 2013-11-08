@@ -8,7 +8,7 @@
 </body>
 
 <template name="LoginView">
-  <div class="row-fluid" id="nameRow">
+  <div class="row" id="nameRow">
     <div class="col-xs-4 col-sm-4 col-sm-offset-4 text-center">
       <h1>Movie Antakshari</h1>
       <br>
@@ -59,7 +59,9 @@
           {{> DropdownListView}}
         </li>
       </span>
-      <span class="text-primary">3,234 points</span>
+      <span class="text-primary">
+        {{totalPoints}} points
+      </span>
     </div>
   </dd>
 </template>
@@ -105,9 +107,8 @@
 </template>
 
 <template name="RoomView">
-  <div class="row-fluid" id="roomsRow">
+  <div class="row">
     <div class="col-xs-4">
-      {{> UserView}}
       {{> RoomListView}}
       {{> LoginLogoutView}}
     </div>
@@ -117,25 +118,83 @@
   </div>
 </template>
 
+<template name="NewGame_Leaderboards_Achievements">
+  <button type="button" class="btn btn-success btn-lg" style="margin-bottom: 10px;">
+    <span class="glyphicon glyphicon-plus"></span>
+     New
+  </button>
+  <button type="button" class="btn btn-success btn-lg" style="margin-bottom: 10px;">
+    <span class="glyphicon glyphicon-plus-sign"></span>
+     Leaderboards
+  </button>
+  <button type="button" class="btn btn-success btn-lg" style="margin-bottom: 10px;">
+    <span class="glyphicon glyphicon-star-empty"></span>
+     Achievements
+  </button>
+</template>
+
+<template name="UserStatView">
+  <dd>
+    <img class="profilepic" src={{profilePic}} alt="">
+    <div class="chatTextBlock">
+      <span>
+            {{userName}}
+      </span>
+      <span class="text-primary">
+        {{points}} points
+      </span>
+    </div>
+  </dd>
+</template>
+
+<template name="OpponentStatView">
+  <dd>
+    <div class="chatTextBlock">
+      <span> 
+        {{userName}} 
+      </span>
+      <span class="text-primary">
+        {{points}} points
+      </span>
+    </div>
+    <img class="profilepic" src={{profilePic}} alt="">    
+  </dd>
+</template>
+
+<template name="UserVsOpponentView">
+  <div class="row">
+    <div class="col-xs-5">
+      {{> UserStatView}}
+    </div>
+    <div class="col-xs-2">
+      V.
+    </div>
+    <div class="col-xs-5">
+      {{> OpponentStatView}}
+    </div>
+  </div>
+</template>
 
 <template name="GameStatsView">
-  <div class="row-fluid">
-    <div class="col-xs-12">
-    Game Stats View Area 
+  <div class="row">
+    <div class="col-xs-4">
+      {{> UserView}}
+    </div>
+    <div class="col-xs-8">
+      {{> UserVsOpponentView}}
     </div>
   </div>
 </template>
 
 <template name="AppWarpChat">
   <div class="container-fluid narrow alpha75">
-    {{> LoginView}}
-    <!--
-      <div class="container-fluid"> 
+    <div class="row-fluid">
+      {{> LoginView}}
+      <div id="roomsRow">
         {{> GameStatsView}}
         {{> RoomView}}
       </div>
-      -->
-      {{> RoomView}}
+    </div>
   </div> 
 </template>
 
