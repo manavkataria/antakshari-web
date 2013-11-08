@@ -269,7 +269,7 @@ function onMovieSearchDone (mInfo) {
 			sendMove(mInfo.title);
 		} else {
 			console.log("movie and poster found");
-			_warpclient.sendChat("<dd align=center><img heght=80 width=80 class='profilepic' src='" + mInfo.poster +
+			_warpclient.sendChat("<dd align=center><img class='poster' src='" + mInfo.poster +
 					"' alt=''/><br><div class='chatTextBlock'><span class='text-primary'>" + mInfo.title 
 					+ "</span></div></dd>");
 			sendMove(mInfo.title);
