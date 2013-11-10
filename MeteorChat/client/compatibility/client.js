@@ -269,9 +269,10 @@ function onMovieSearchDone (mInfo) {
 			sendMove(mInfo.title);
 		} else {
 			console.log("movie and poster found");
-			_warpclient.sendChat("<dd align=center><img class='poster' src='" + mInfo.poster +
-					"' alt=''/><br><div class='chatTextBlock'><span class='text-primary'>" + mInfo.title 
-					+ "</span></div></dd>");
+            //TODO: FIXME: XXX: Eliminate HTML from send chat! Security Threat! Bobby tables!
+            //TODO: BUG: Input as 'nautanki' doesn't get rendered!
+			_warpclient.sendChat("<dd align='center'><img class='poster' src='" + mInfo.poster +
+					"' alt=''/><br>" + mInfo.title + "</dd>");
 			sendMove(mInfo.title);
 		}
 	}
