@@ -53,17 +53,17 @@ Template.LoginLogoutView.events({
 	
 });
 
-Template.UserView.userName = function() {
+Template.UserAndMenuView.userName = function() {
 	if(Meteor.user()!= null)
 	  return Meteor.user().services.facebook.name;
 };
 
-Template.UserView.profilePic = function() {
+Template.UserAndMenuView.profilePic = function() {
 	if(Meteor.user()!= null)
 	  return 'http://graph.facebook.com/' + Meteor.user().services.facebook.id + '/picture?width=32';
 };
 
-Template.UserView.totalPoints = function() {
+Template.UserAndMenuView.totalPoints = function() {
 	return '1,234';
 };
 
@@ -94,3 +94,21 @@ Template.OpponentStatView.points = function() {
 	return '500';
 };
 
+/* Room List Item */
+
+Template.RoomListItemView.userName = function() {
+	return 'Nikita Mendiratta';
+};
+
+Template.RoomListItemView.profilePic = function() {
+	if(Meteor.user()!= null)
+	  return 'http://graph.facebook.com/' + 'nikitamendiratta' + '/picture?width=32';
+};
+
+Template.RoomListItemView.move = function() {
+	return 'Don 2';
+};
+
+Template.RoomListItemView.timeAgo = function() {
+	return '12 hours ago';
+};

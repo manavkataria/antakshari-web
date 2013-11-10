@@ -26,14 +26,33 @@
   </div>
 </template>
 
+<template name="RoomListItemView">
+  <dd class="list-group-item active">
+    <img class="profilepic" src={{profilePic}} alt="">
+    <div class="chatTextBlock">
+      <div class="overflow-ellipsis">
+        {{userName}}
+      </div>
+      <div class="text-points overflow-ellipsis">
+        '{{move}}' - {{timeAgo}}
+      </div>
+    </div>
+  </dd>
+</template>
+
 <template name="RoomListView">
   <h4>Your Move</h4>
   <ul class="nav nav-pills nav-stacked" id="roomsList">
   </ul>
+
   <h4 id="theirMoveHead">Their Move</h4>
-  <ul class="nav nav-pills nav-stacked" id="theirTurnRoomsList">
-    <li> <a href='#'> Antakshari with Niki(0) </a> </li>
-  </ul>
+  <div class="list-group">
+    {{> RoomListItemView}}
+    <a href="#" class="list-group-item">
+      <h5 class="list-group-item-heading">Disha Kataria</h5>
+      <p class="list-group-item-text">'Harry Potter and the Prisoner of Azkaban' 2 days ago</p>
+    </a>
+  </div>
 </template>
 
 <template name="DropdownListView">
@@ -47,7 +66,7 @@
   </ul>
 </template>
 
-<template name="UserView">
+<template name="UserAndMenuView">
   <dd>
     <img class="profilepic" src={{profilePic}} alt="">
     <div class="chatTextBlock nav">
@@ -137,12 +156,12 @@
   <dd>
     <img class="profilepic" src={{profilePic}} alt="">
     <div class="chatTextBlock">
-      <span>
-            {{userName}}
-      </span>
-      <span class="text-points">
+      <div class="overflow-ellipsis">
+        {{userName}}
+      </div>
+      <div class="text-points overflow-ellipsis">
         {{points}} points
-      </span>
+      </div>
     </div>
   </dd>
 </template>
@@ -150,12 +169,12 @@
 <template name="OpponentStatView">
   <dd>
     <div class="chatTextBlock">
-      <span> 
+      <div class="overflow-ellipsis"> 
         {{userName}} 
-      </span>
-      <span class="text-points">
+      </div>
+      <div class="text-points overflow-ellipsis">
         {{points}} points
-      </span>
+      </div>
     </div>
     <img class="profilepic" src={{profilePic}} alt="">    
   </dd>
@@ -178,7 +197,7 @@
 <template name="GameStatsView">
   <div class="row">
     <div class="col-xs-4">
-      {{> UserView}}
+      {{> UserAndMenuView}}
     </div>
     <div class="col-xs-8">
       {{> UserVsOpponentView}}

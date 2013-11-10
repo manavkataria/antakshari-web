@@ -51,6 +51,7 @@ body {
 }
 
 .chatTextBlock {
+  max-width: 69%;
   display: inline-block;
   vertical-align: middle;
 }
@@ -73,11 +74,11 @@ body {
   font-weight: bold;
 }
 
-h4, h1 {
+h1, h4 {
   color: white;
 }
 
-#theirMoveHead, #theirTurnRoomsList {
+#theirMoveHead {
   text-align: right;
 }
 
@@ -94,6 +95,12 @@ h4, h1 {
 
 .text-white {
   color: white;
+}
+
+.overflow-ellipsis, p {
+  overflow: hidden; 
+  text-overflow: ellipsis; 
+  white-space: nowrap;
 }
 
 .poster {
