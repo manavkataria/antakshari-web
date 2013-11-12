@@ -66,6 +66,14 @@
   </ul>
 </template>
 
+<template name="GameProgressBarView">
+  <div class="progress">
+    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%">
+      <span class="sr-only">20% Complete</span>
+    </div>
+  </div>
+</template>
+
 <template name="UserAndMenuView">
   <dd>
     <img class="profilepic" src={{profilePic}} alt="">
@@ -192,6 +200,11 @@
       {{> OpponentStatView}}
     </div>
   </div>
+  <div class="row">
+    <div class="col-xs-12">
+      {{> GameProgressBarView}}
+    </div>
+  </div>
 </template>
 
 <template name="GameStatsView">
@@ -216,5 +229,3 @@
     </div>
   </div> 
 </template>
-
-
