@@ -1,47 +1,76 @@
-var Channels, Messages, Users;
+var Games, Messages, Players, GameStates;
 
-Channels = new Meteor.Collection("channels");
-
-Meteor.publish("channels", function() {
-  return Channels.find();
+Games = new Meteor.Collection("games");
+//{game_name, player_count, turn_count}
+Meteor.publish("games", function() {
+  return Games.find({});
 });
 
-Users = new Meteor.Collection("users");
+GameStates = new Meteor.Collection("gamestates");
+//{game_name, player_count}
+Meteor.publish("gamestates", function(gameId) {
+	return GameStates.find({
+		game_id: gameId
+	});
+});
 
-Meteor.publish("users", function(channel_id) {
-  return Users.find({
-    channel_id: channel_id
+Players = new Meteor.Collection("players");
+//{game_id}
+Meteor.publish("players", function(gameId) {
+  return Players.find({
+    game_id: gameId
   });
 });
 
 Messages = new Meteor.Collection("messages");
-
-Meteor.publish("messages", function(channel_id) {
+//{player_id, game_id, msg, msg_type, timestamp}
+Meteor.publish("messages", function(gameId) {
   return Messages.find({
-    channel_id: channel_id
+    game_id: gameId
   });
 });
 
 Meteor.startup(function() {
-  var channel, data, i, len, results;
-  if (Channels.find().count() == 0) {
-    data = ["Meteor", "Javascript", "Objective-C"];
-    results = [];
-    for (i = 0, len = data.length; i < len; i++) {
-      channel = data[i];
-      results.push(Channels.insert({
-        name: channel
-      }));
-    }
-    return results;
+
+  if (Games.find().count() != 0) {
+	Games.remove({});
   }
   
-  if (Users.find().count() != 0) {
-	Users.remove({});
+  if (GameStates.find().count() != 0) {
+		GameStates.remove({});
   }
   
+  if (Players.find().count() != 0) {
+	Players.remove({});
+  }
+	  
   if (Messages.find().count() != 0) {
-	  Messages.remove({});
+	Messages.remove({});
   }
+  
+  Meteor.methods({
+	  joinGame: function (playerId) {
+		var gameDoc, gameId;
+		gameDoc = Games.findOne({player_count: {$lt: 2}});
+		//console.log(gameDoc);
+		if(typeof(gameDoc) == 'undefined') {
+			gameName = "Antakshari" + (Math.floor(Math.random() * 1000));
+			gameDoc = Games.insert({
+				game_name: gameName,
+				player_count: 1,
+				turn_count: 0,
+			});
+			gameId = gameDoc;
+			playerCount = 1;
+		} else {
+			Games.update(gameDoc._id, {$inc: {player_count: 1}});
+			gameId = gameDoc._id;
+			gameName = gameDoc.game_name;
+			playerCount = 2;
+		}
+		return {game_name: gameName, game_id: gameId, player_count: playerCount};
+	  }
+  });
 });
+
 

@@ -1,0 +1,77 @@
+<head>
+	<title>Movie Antakshari</title>
+</head>
+
+<body>
+	<div id="wrapper">
+		<div id="header" class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<a class="brand" href="#">
+						Movie Antakshari
+					</a>
+				</div>
+			</div>
+		</div>
+
+		<div id="container">
+			<div id="messages-container">
+				<div class="well" id="messages">
+					{{> messages}}
+				</div>
+			</div>
+			<div id="users-container">
+				<div class="well" id="users">
+					{{> players}}
+				</div>
+			</div>
+		</div>
+
+		<div id="games">
+			{{> games}}
+		</div>
+
+		<div id="footer">
+			<div class="well no-padding-bottom">
+				{{> input}}
+			</div>
+		</div>
+	</div>
+</body>
+
+<template name="input">
+	<input id="message" type="text">
+</template>
+
+<template name="messages">
+	{{#each messages}}
+	>> {{player_name}}
+	{{#if poster_found}}
+				<dd align=center>
+					<img heght=80 width=80 class='profilepic' src={{poster}} alt=''/><br>
+					<div class='chatTextBlock'>
+						<span class='text-primary'>{{movie}}</span>
+					</div>
+				</dd>
+	{{else}}
+				<dd align=center>
+					<span class='text-primary'>{{movie}}</span>
+				</dd><br />
+	{{/if}}
+	{{/each}}
+</template>
+
+<template name="players">
+	{{#each players}}
+		{{player_name}} ({{game_score}}) [{{is_turn}}]<br />
+	{{/each}}
+</template>
+
+<template name="games">
+	<ul id="games">
+		{{#each gamestates}}
+			<li><button class="gameBtn btn btn-small {{state}}"> {{game_name}} [{{is_turn}}] [{{turn_count}}]</button></li>
+		{{/each}}
+		<li><button id="newGame" class="btn btn-inverse">New Game</button></li>
+	</ul>
+</template>
