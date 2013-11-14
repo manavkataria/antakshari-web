@@ -105,7 +105,7 @@
 </template>
 
 <template name="PanelBodyView">
-  <div class="panel-body" id="chat-window">
+  <div class="panel-body chat-panel" id="chat-window">
     <dl class="nav nav-pills nav-stacked" id="chat">
       Connected.
     </dl>
@@ -202,13 +202,21 @@ data-readOnly=true
     </div>
 </template>
 
+<template name="circularChartView1">
+  <input type="text" class="dial" value="10" data-thickness=".4" data-width="50" data-height="50" data-fgColor="F7464A" data-readOnly=true>
+</template>
+
+<template name="circularChartView2">
+  
+</template>
+
 <template name="UserVsOpponentView">
   <div class="row">
     <div class="col-xs-5">
       {{> UserStatView}}
     </div>
     <div class="col-xs-2">
-      <input type="text" class="dial" value="10" data-thickness=".4" data-width="50" data-height="50" data-fgColor="F7464A" data-readOnly=true>
+      {{> circularChartView2}}
     </div>
     <div class="col-xs-5">
       {{> OpponentStatView}}
