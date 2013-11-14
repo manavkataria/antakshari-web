@@ -44,10 +44,11 @@ body {
   padding-bottom: 2px;
 }
 
-.panel-body {
+.chat-panel {
 	height: 300px;
 	overflow-y: auto;
-	padding-right: 1px
+	padding-right: 1px;
+  min-height: 80%;
 }
 
 .chatTextBlock {

@@ -112,3 +112,11 @@ Template.RoomListItemView.move = function() {
 Template.RoomListItemView.timeAgo = function() {
 	return '12 hours ago';
 };
+
+$(function() {
+    //$(".dial").knob();
+    $(".dial").knob({
+            'min':0
+            ,'max':30
+            });
+});
