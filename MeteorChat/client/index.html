@@ -188,26 +188,8 @@
   </dd>
 </template>
 
-<template name="GameProgressCircleView">
-<div class="demo">
-        <p>× Readonly</p>
-        <pre>data-thickness=".4"
-data-fgColor="chartreuse"
-data-readOnly=true
-        </pre>
-        <div style="display:inline;width:200px;height:200px;">
-          <canvas width="200" height="200px"></canvas>
-          <input class="knob" data-fgcolor="chartreuse" data-thickness=".4" data-readonly="true" value="22" readonly="readonly" style="width: 104px; height: 66px; position: absolute; vertical-align: middle; margin-top: 66px; margin-left: -152px; border: 0px; background-image: none; font-weight: bold; font-style: normal; font-variant: normal; font-size: 40px; line-height: normal; font-family: Arial; text-align: center; color: rgb(127, 255, 0); padding: 0px; -webkit-appearance: none; background-position: initial initial; background-repeat: initial initial;">
-        </div>
-    </div>
-</template>
-
 <template name="circularChartView1">
   <input type="text" class="dial" value="10" data-thickness=".4" data-width="50" data-height="50" data-fgColor="F7464A" data-readOnly=true>
-</template>
-
-<template name="circularChartView2">
-  
 </template>
 
 <template name="UserVsOpponentView">
@@ -216,7 +198,7 @@ data-readOnly=true
       {{> UserStatView}}
     </div>
     <div class="col-xs-2">
-      {{> circularChartView2}}
+      {{> circularChartView1}}
     </div>
     <div class="col-xs-5">
       {{> OpponentStatView}}
